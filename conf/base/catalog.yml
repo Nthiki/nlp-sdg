@@ -20,6 +20,19 @@ sdg_data:
   save_args:
     sep: '\t'
 
+data_engineering.model_input_data:
+  type: MemoryDataSet
+
+twitter_analytics.dummy_data:
+  type: MemoryDataSet
+
+text_comprehension.dummy_data:
+  type: MemoryDataSet
+
+text_classification.dummy_data:
+  type: MemoryDataSet
+
+
 # dummy_data:
 #   type: spark.SparkDataSet
   # filepath: data/01_raw/osdg-dummy_data.csv
