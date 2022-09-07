@@ -2,8 +2,9 @@
 from typing import Dict
 
 from kedro.pipeline import Pipeline, pipeline
-
-
+from nlp_sdg.pipelines import data_engineering as de
+from nlp_sdg.pipelines import twitter_analytics as ta
+from nlp_sdg.pipelines import text_comprehension as tc
 def register_pipelines() -> Dict[str, Pipeline]:
     """Register the project's pipelines.
 
@@ -11,4 +12,11 @@ def register_pipelines() -> Dict[str, Pipeline]:
         A mapping from a pipeline name to a ``Pipeline`` object.
 
     """
-    return {"__default__": pipeline([])}
+    data_engineering = de.create_pipeline()
+    twitter_analytics = ta.create_pipeline()
+    text_comprehension = tc.create_pipeline()
+    return {"__default__": data_engineering,
+            "data_engineering": data_engineering,
+            "twitter_analytics": twitter_analytics,
+            "text_comprehension": text_comprehension
+            }
