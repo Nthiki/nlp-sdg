@@ -20,7 +20,7 @@ sdg_data:
   save_args:
     sep: '\t'
 
-data_engineering.model_input_data:
+model_input_data:
   type: MemoryDataSet
 
 twitter_analytics.dummy_data:

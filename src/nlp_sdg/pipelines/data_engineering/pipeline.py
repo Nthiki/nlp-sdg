@@ -24,6 +24,7 @@ def create_pipeline(**kwargs) -> Pipeline:
     data_engineering = pipeline(
         pipe=pipeline_instance,
         inputs="sdg_data",
-        namespace = "data_engineering"
+        namespace = "data_engineering",
+        outputs = "model_input_data"
     )
     return data_engineering

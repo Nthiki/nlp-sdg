@@ -15,7 +15,7 @@ def create_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func=dummy_node,
-                inputs="data_engineering.model_input_data",
+                inputs="model_input_data",
                 outputs="comprehension_output",
                 name="dummy_node",
             ),
@@ -23,7 +23,7 @@ def create_pipeline(**kwargs) -> Pipeline:
     )
     text_comprehension = pipeline(
         pipe=pipeline_instance,
-        inputs="data_engineering.model_input_data",
+        inputs="model_input_data",
         namespace = "text_comprehension"
     )
     return text_comprehension

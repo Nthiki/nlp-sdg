@@ -14,7 +14,7 @@ def create_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func=dummy_node,
-                inputs="data_engineering.model_input_data",
+                inputs="model_input_data",
                 outputs="classification_output",
                 name="dummy_node",
             ),
@@ -22,7 +22,7 @@ def create_pipeline(**kwargs) -> Pipeline:
     )
     text_classification = pipeline(
         pipe=pipeline_instance,
-        inputs="data_engineering.model_input_data",
+        inputs="model_input_data",
         namespace = "text_classification"
     )
     return text_classification
