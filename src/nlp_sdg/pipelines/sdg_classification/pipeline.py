@@ -16,7 +16,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 func=dummy_node,
                 inputs="model_input_data",
                 outputs="classification_output",
-                name="dummy_node",
+                name="dummy_node_classification",
             ),
         ]
     )
