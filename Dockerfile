@@ -1,8 +1,8 @@
-ARG BASE_IMAGE=python:3.6-buster
+ARG BASE_IMAGE=python:3.8-buster
 FROM $BASE_IMAGE
 
 
-#java
+# install java
 RUN apt-get update && apt-get install -y default-jdk-headless && rm -rf /var/lib/apt/lists/*
 ENV JAVA_HOME "/usr/lib/jvm/default-java"
 # install project requirements
