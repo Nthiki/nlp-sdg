@@ -3,6 +3,8 @@ This is a boilerplate pipeline 'data_engineering'
 generated using Kedro 0.18.2
 """
 
+#kedro test
+
 from kedro.pipeline import Pipeline, node, pipeline
 
 from nlp_sdg.pipelines.data_engineering.nodes import dummy_node
