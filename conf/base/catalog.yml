@@ -9,28 +9,28 @@
 # (transcoding), templating and a way to reuse arguments that are frequently repeated. See more here:
 # https://kedro.readthedocs.io/en/stable/data/data_catalog.html
 #
-sdg_data:
-  type: spark.SparkDataSet
-  filepath: data/01_raw/train.csv
-  file_format: csv
+#sdg_data:
+#  type: spark.SparkDataSet
+#  filepath: data/01_raw/train.csv
+#  file_format: csv
   #credentials: dev_s3
-  load_args:
-    header: True
-    inferSchema: True
-  save_args:
-    sep: '\t'
+#  load_args:
+#    header: True
+#    inferSchema: True
+#  save_args:
+#    sep: '\t'
 
-model_input_data:
-  type: MemoryDataSet
+#model_input_data:
+#  type: MemoryDataSet
 
-twitter_analytics.dummy_data:
-  type: MemoryDataSet
+#twitter_analytics.dummy_data:
+#  type: MemoryDataSet
 
-text_comprehension.dummy_data:
-  type: MemoryDataSet
+#text_comprehension.dummy_data:
+#  type: MemoryDataSet
 
-text_classification.dummy_data:
-  type: MemoryDataSet
+#text_classification.dummy_data:
+#  type: MemoryDataSet
 
 
 # dummy_data:
@@ -44,3 +44,31 @@ text_classification.dummy_data:
   # save_args:
   #   sep: '\t'
   #   overwrite: True
+
+sdg_text_data:
+  type: pandas.CSVDataSet
+  filepath: data/01_raw/train.csv
+  layer: raw
+  load_args:
+    sep: '\t'
+
+#preprocessed_data:
+cleaned_agreement_data:
+  type: pandas.CSVDataSet
+  filepath: data/02_intermediate/cleaned_agreement_data.csv
+  layer: intermediate
+
+#processed_data on SDG:
+sdg_model_input_table:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/sdg_model_input_table.csv
+  layer: primary
+
+
+# models
+
+classifier:
+  type: pickle.PickleDataSet
+  filepath: data/06_models/classifier.pickle
+  versioned: true
+  layer: models
