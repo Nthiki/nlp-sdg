@@ -1,0 +1,8 @@
+{
+  "cookiecutter": {
+    "pipeline_name": "data_processing_classification",
+    "kedro_version": "0.18.2",
+    "_template": "/usr/local/lib/python3.8/site-packages/kedro/templates/pipeline",
+    "_output_dir": "/home/kedro/src/nlp_sdg/pipelines"
+  }
+}
