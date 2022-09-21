@@ -69,3 +69,12 @@ sdg_model_input_table:
   layer: primary
 
 
+# models
+
+classifier:
+  type: pickle.PickleDataSet
+  filepath: data/06_models/sdg_classifier.pickle
+  versioned: true
+  layer: models
+
+
