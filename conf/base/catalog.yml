@@ -46,6 +46,7 @@ text_classification.dummy_data:
   #   overwrite: True
 
 
+#sdg text data for tutorial example
 sdg_text_data:
   type: pandas.CSVDataSet
   filepath: data/01_raw/train.csv
@@ -53,9 +54,18 @@ sdg_text_data:
   load_args:
     sep: '\t'
 
+
+#The sdg text data after being cleaned with agreement score
 cleaned_agreement_data:
   type: pandas.CSVDataSet
   filepath: data/02_intermediate/cleaned_agreement_data.csv
   layer: intermediate
+
+
+#processed SDG text data ready for ML model training
+sdg_model_input_table:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/sdg_model_input_table.csv
+  layer: primary
 
 

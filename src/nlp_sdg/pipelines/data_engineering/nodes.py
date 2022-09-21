@@ -7,6 +7,20 @@ import numpy as np
 import pandas as pd
 from pyspark.sql import DataFrame
 
+#NLTK library
+import nltk
+from nltk.stem import WordNetLemmatizer
+from nltk.corpus import stopwords
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('omw-1.4')
+
+''' ================================== 
+
+ Dummy code
+
+ ==================================== '''
+
 
 def dummy_node(data: DataFrame) -> DataFrame:
     
@@ -20,6 +34,31 @@ def dummy_node(data: DataFrame) -> DataFrame:
 
 
     return data
+
+''' ================================== 
+
+ Data engineering functions for Team A
+
+ ==================================== '''
+
+
+
+
+
+''' ================================== 
+
+ Data engineering functions for Team B
+
+ ==================================== '''
+
+
+
+
+''' ================================== 
+
+ Data engineering functions for Team C
+
+ ==================================== '''
 
 
 
@@ -38,8 +77,46 @@ def clean_agreement(data: pd.DataFrame) -> pd.DataFrame:
     '''
 
     data = data.loc[(data['labels_negative'] < data['labels_positive']) & (data['agreement'] >= 0.4)]
-    print("success")
 
     return data
+
+# secondary functions that help clean the SDG text data
+
+def _lemmatize(text: str) -> str:
+    stop_words = stopwords.words('english')
+    lemmatizer = WordNetLemmatizer()
+    text = text.lower()
+    text = [lemmatizer.lemmatize(word) for word in text.split() if word not in stop_words]
+    return ' '.join(text)
+
+#primary function
+
+def preprocess_sdg_data(data: pd.DataFrame) -> pd.DataFrame:
+    '''
+    Preprocess data.
+    
+     Args:
+        data: Full (all columns) training cleaned data according to agreement score
+        
+     Returns:
+        Processed text data as pandas dataframe.
+        
+    '''
+    
+    #lemmatize the text
+    data['text'] = data['text'].apply(_lemmatize)
+
+    return data
+
+    
+
+''' ================================== 
+
+                 The end 
+
+ ==================================== '''
+
+
+
 
 

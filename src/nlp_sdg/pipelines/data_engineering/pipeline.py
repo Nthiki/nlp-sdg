@@ -5,7 +5,7 @@ generated using Kedro 0.18.2
 
 from kedro.pipeline import Pipeline, node, pipeline
 
-from nlp_sdg.pipelines.data_engineering.nodes import dummy_node, clean_agreement
+from nlp_sdg.pipelines.data_engineering.nodes import dummy_node, clean_agreement, preprocess_sdg_data
 
 
 
@@ -25,12 +25,18 @@ def create_pipeline(**kwargs) -> Pipeline:
                 outputs="cleaned_agreement_data",
                 name="clean_agreement_node",
             ),
+            node(
+                func=preprocess_sdg_data,
+                inputs="cleaned_agreement_data",
+                outputs="sdg_model_input_table",
+                name="create_sdg_model_input_table_node",
+            ),
         ]
     )
     data_engineering = pipeline(
         pipe=pipeline_instance,
         inputs= ["sdg_data", "sdg_text_data"],
         namespace = "data_engineering",
-        outputs = ["model_input_data", 'cleaned_agreement_data']
+        outputs = ["model_input_data", 'cleaned_agreement_data',"sdg_model_input_table"]
     )
     return data_engineering
