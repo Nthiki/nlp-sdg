@@ -17,7 +17,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 func=preprocess_data,
                 inputs="sdg_data",
                 outputs="preprocess_data",
-                name="preprocess_data,",
+                name="preprocess_data",
             ),
         ]
     )

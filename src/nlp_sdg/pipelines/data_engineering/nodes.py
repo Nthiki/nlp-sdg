@@ -113,7 +113,7 @@ def preprocess_data(data: pd.DataFrame) -> pd.DataFrame:
         data: Full (all columns) training cleaned data according to agreement score
         
      Returns:
-        Processed text data as pandas dataframe.
+        Processed text data as pandas dataframe
         
     '''
     # removing missing rows in the important columns
@@ -126,6 +126,5 @@ def preprocess_data(data: pd.DataFrame) -> pd.DataFrame:
     data = clean_agreement(data)
     # Resampling the dataset to balance each target
     data = data_balancing(data)
-
 
     return data
