@@ -44,3 +44,17 @@ text_classification.dummy_data:
   # save_args:
   #   sep: '\t'
   #   overwrite: True
+
+
+#sdg text data for tutorial example
+twitter_data:
+  type: pandas.CSVDataSet
+  filepath: data/01_raw/tweets.csv
+  layer: raw
+
+
+#The twitter text data after being cleaned (it has a new column called 'clean_text')
+cleaned_twitter_data:
+  type: pandas.CSVDataSet
+  filepath: data/02_intermediate/cleaned_twitter_data.csv
+  layer: intermediate
