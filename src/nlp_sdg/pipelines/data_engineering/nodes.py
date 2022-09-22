@@ -12,7 +12,7 @@ from nltk.corpus import stopwords, wordnet
 from nltk.stem import WordNetLemmatizer
 
 
-def clean_agreement(data: pd.DataFrame) -> pd.DataFrame:
+def _clean_agreement(data: pd.DataFrame) -> pd.DataFrame:
     '''
     This function takes in a dataframe and filters out the rows with negative label higher than positive label,
     and have an agreement score less than 0.4
@@ -29,16 +29,23 @@ def clean_agreement(data: pd.DataFrame) -> pd.DataFrame:
     return data
 
 
-def missing_data(df: pd.DataFrame) ->pd.DataFrame:
+def _missing_data(df: pd.DataFrame) ->pd.DataFrame:
     """
+    This function takes in a dataframe and filters out the rows with missing data
     
+    Args: 
+        Source training data
+        
+    Returns:
+        Data without missing cells
+
     """
     df1 = df.dropna(subset=['text'])
     df2 = df1.dropna(subset=['sdg'])
     return df2
 
 
-def clean_article(text: str) -> str:
+def _clean_article(text: str) -> str:
     
     """Converts apostrophe suffixes to words, replace webpage links with url, annotate 
     hashtags and mentions, remove a selection of punctuation, and convert all words to lower case.
@@ -54,7 +61,7 @@ def clean_article(text: str) -> str:
 
 
 def _lemmatize(text: str) -> str:
-    """Lemmatize text.
+    """This function is responsible for Lemmatization of the text.
     Args:
         text (String): sentence containing 'text' to lemmatize (stemming)
     Returns:
@@ -69,7 +76,7 @@ def _lemmatize(text: str) -> str:
 
 
 # Creating a function to upscale and balance the dataset
-def data_balancing(df_input: pd.DataFrame) -> pd.DataFrame:
+def _data_balancing(df_input: pd.DataFrame) -> pd.DataFrame:
     """
         Dataset balancing for all target variable to be equal in frequency.
     Args:
@@ -105,9 +112,9 @@ def data_balancing(df_input: pd.DataFrame) -> pd.DataFrame:
     return df_resampled
 
 
-def preprocess_data(data: pd.DataFrame) -> pd.DataFrame:
+def preprocessed_data(data: pd.DataFrame) -> pd.DataFrame:
     '''
-    Preprocess data.
+     This function applies all the above functions to the dataframe to make it preprocessed data.
     
      Args:
         data: Full (all columns) training cleaned data according to agreement score
@@ -117,14 +124,14 @@ def preprocess_data(data: pd.DataFrame) -> pd.DataFrame:
         
     '''
     # removing missing rows in the important columns
-    data = missing_data(data)
+    data = _missing_data(data)
     #apply text hero
-    data['text'] = data['text'].apply(clean_article)
+    data['text'] = data['text'].apply(_clean_article)
     #lemmatize the text
     data['text'] = data['text'].apply(_lemmatize)
     #clean_agreement
-    data = clean_agreement(data)
+    data = _clean_agreement(data)
     # Resampling the dataset to balance each target
-    data = data_balancing(data)
+    data = _data_balancing(data)
 
     return data

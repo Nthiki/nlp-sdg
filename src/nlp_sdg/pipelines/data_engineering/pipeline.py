@@ -14,10 +14,10 @@ def create_pipeline(**kwargs) -> Pipeline:
         
         [
             node(
-                func=preprocess_data,
+                func=preprocessed_data,
                 inputs="sdg_data",
-                outputs="preprocess_data",
-                name="preprocess_data",
+                outputs="preprocessed_data",
+                name="preprocessed_data",
             ),
         ]
     )
