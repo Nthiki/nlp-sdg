@@ -58,3 +58,10 @@ cleaned_twitter_data:
   type: pandas.CSVDataSet
   filepath: data/02_intermediate/cleaned_twitter_data.csv
   layer: intermediate
+
+#The twitter text data after being labelled (sentiment)
+labelled_twitter_data:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/labelled_twitter_data.csv
+  layer: primary
+  
