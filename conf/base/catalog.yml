@@ -50,7 +50,7 @@ sdg_text_data:
   filepath: data/01_raw/train.csv
   layer: raw
   load_args:
-    sep: '\t'
+    # sep: '\t'
 
 qes_and_ans_data:
   type: pandas.CSVDataSet
