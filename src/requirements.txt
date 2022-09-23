@@ -24,4 +24,4 @@ joblib
 numexpr
 sklearn
 scipy
-
+psycopg2

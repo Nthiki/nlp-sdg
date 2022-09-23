@@ -15,16 +15,16 @@ def create_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func=dummy_node,
-                inputs="sdg_data",
-                outputs="model_input_data",
-                name="dummy_node",
-            ),
+                inputs="test_data",
+                outputs= "confirm_data",
+                name= "confirm_data_node",
+            )
         ]
     )
     data_engineering = pipeline(
         pipe=pipeline_instance,
-        inputs="sdg_data",
+        inputs= "test_data",
         namespace = "data_engineering",
-        outputs = "model_input_data"
+        outputs = "confirm_data"
     )
     return data_engineering

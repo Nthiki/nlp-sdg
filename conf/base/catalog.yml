@@ -44,3 +44,13 @@ text_classification.dummy_data:
   # save_args:
   #   sep: '\t'
   #   overwrite: True
+
+test_data:
+  type: pandas.SQLTableDataSet
+  credentials: rds_connection
+  table_name: tbl_test
+  save_args:
+    if_exists: replace
+
+data_engineering.confirm_data:
+  type: MemoryDataSet

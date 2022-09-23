@@ -17,5 +17,4 @@ def dummy_node(data: DataFrame) -> DataFrame:
         data.
     """
 
-
     return data
