@@ -2,7 +2,101 @@
 This is a boilerplate pipeline 'twitter_analytics'
 generated using Kedro 0.18.2
 """
+#loading necessary libraries
+import numpy as np
+import pandas as pd
+import re
 
+# libraries for NLP
+#pip install nltk
+import nltk
+nltk.download('wordnet')
+nltk.download('omw-1.4')
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('stopwords')
+from nltk.tokenize import word_tokenize
+from nltk import pos_tag
+from nltk.corpus import wordnet
+from nltk.corpus import stopwords
+from nltk import SnowballStemmer, PorterStemmer, LancasterStemmer
+from nltk.stem import WordNetLemmatizer
+
+#this is a dummy- node
 def dummy_node(data):
     print("Twitter Analytics dummy node completed")
     return 5
+
+def data_preprocessing(df:pd.DataFrame)->pd.DataFrame:
+    '''
+    Function takes in the whole dataframe and carries out the following preprocessing steps:
+    
+    1. General text cleaning
+    2. Part of Speech tagging
+    3. Lemmatization
+    
+    Then return the dataframe
+    '''
+    def clean_tweet(tweet):
+        '''
+        tweet: String
+               Input Data
+        tweet: String
+               Output Data
+
+        func: Removes hashtag symbol in front of a word
+              Replace URLs with a space in the message
+              Replace ticker symbols with space. The ticker symbols are any stock symbol that starts with $.
+              Replace  usernames with space. The usernames are any word that starts with @.
+              Replace everything not a letter or apostrophe with space
+              Remove single letter words
+              filter all the non-alphabetic words, then join them again
+
+        '''
+    
+        tweet = re.sub(r'#([^\s]+)', r'\1', tweet)
+
+        tweet = re.sub('\$[a-zA-Z0-9]*', ' ', tweet)
+        tweet = re.sub('https?:\/\/[a-zA-Z0-9@:%._\/+~#=?&;-]*', ' ', tweet)
+        tweet = re.sub('\@[a-zA-Z0-9]*', ' ', tweet)
+        tweet = re.sub('[^a-zA-Z\']', ' ', tweet)
+        tweet = re.sub(r'\s+', " ", tweet)
+        tweet = ' '.join( [w for w in tweet.split() if len(w)>1] )
+    
+        return tweet
+    
+    def token_stop_pos(text):
+        '''
+        Maps the part of speech to words in sentences giving consideration to words that are nouns, verbs, 
+        adjectives and adverbs
+        '''
+        pos_dict = {'J':wordnet.ADJ, 'V':wordnet.VERB, 'N':wordnet.NOUN, 'R':wordnet.ADV}
+        tags = pos_tag(word_tokenize(text))
+        newlist = []
+        for word, tag in tags:
+            if word.lower() not in set(stopwords.words('english')):
+                newlist.append(tuple([word, pos_dict.get(tag[0])]))
+        return newlist
+    
+    def lemmatize(pos_data):
+        '''
+        Performs lemmatization on tokens based on its part of speech tagging 
+        '''
+        wordnet_lemmatizer = WordNetLemmatizer()
+        lemma_rew = " "
+        for word, pos in pos_data:
+            if not pos:
+                lemma = word
+                lemma_rew = lemma_rew + " " + lemma
+            else:
+                lemma = wordnet_lemmatizer.lemmatize(word, pos=pos)
+                lemma_rew = lemma_rew + " " + lemma
+        return lemma_rew
+    
+    
+    df['clean_text'] = df['Text'].apply(lambda x:clean_tweet(x))
+    df['POS tagged'] = df['clean_text'].apply(token_stop_pos)
+    df['Lemma'] = df['POS tagged'].apply(lemmatize)
+    print('success!')
+    
+    return df

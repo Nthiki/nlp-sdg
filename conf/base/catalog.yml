@@ -32,6 +32,19 @@ text_comprehension.dummy_data:
 text_classification.dummy_data:
   type: MemoryDataSet
 
+tweet_text_data:
+  type: pandas.CSVDataSet
+  filepath: data/01_raw/tweets_2.csv
+  layer: raw
+  #load_args:
+    #sep: '/t'
+
+clean_tweet_data:
+  type: pandas.CSVDataSet
+  filepath: data/01_intermediate/clean_tweets.csv
+  layer: intermediate
+  
+
 
 # dummy_data:
 #   type: spark.SparkDataSet
