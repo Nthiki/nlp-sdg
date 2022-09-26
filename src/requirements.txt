@@ -24,4 +24,5 @@ joblib
 numexpr
 sklearn
 scipy
-
+allennlp
+allennlp-models

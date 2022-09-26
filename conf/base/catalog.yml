@@ -44,3 +44,16 @@ text_classification.dummy_data:
   # save_args:
   #   sep: '\t'
   #   overwrite: True
+
+sdg_text_data:
+  type: pandas.CSVDataSet
+  filepath: data/01_raw/train.csv
+  layer: raw
+  load_args:
+    # sep: '\t'
+
+qes_and_ans_data:
+  type: pandas.CSVDataSet
+  filepath: data/02_intermediate/qes_and_ans_data.csv
+  layer: intermediate
+  
