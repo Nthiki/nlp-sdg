@@ -14,29 +14,17 @@ def create_pipeline(**kwargs) -> Pipeline:
         
         [
             node(
-                func=dummy_node,
+                func=osdg_preprocessed_data,
                 inputs="sdg_data",
-                outputs="model_input_data",
-                name="dummy_node",
-            ),
-            node(
-                func=clean_agreement,
-                inputs="sdg_text_data",
-                outputs="cleaned_agreement_data",
-                name="clean_agreement_node",
-            ),
-            node(
-                func=preprocess_sdg_data,
-                inputs="cleaned_agreement_data",
-                outputs="sdg_model_input_table",
-                name="create_sdg_model_input_table_node",
+                outputs="osdg_preprocessed_data",
+                name="osdg_preprocess_data_node",
             ),
         ]
     )
     data_engineering = pipeline(
         pipe=pipeline_instance,
-        inputs= ["sdg_data", "sdg_text_data"],
+        inputs= "sdg_data",
         namespace = "data_engineering",
-        outputs = ["model_input_data", 'cleaned_agreement_data',"sdg_model_input_table"]
+        outputs = "osdg_preprocessed_data",
     )
     return data_engineering
