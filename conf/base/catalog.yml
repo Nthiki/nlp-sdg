@@ -41,11 +41,6 @@ text_comprehension.dummy_data:
   type: MemoryDataSet
 
 
-#rds_database:
-#  type: pandas.SQLTableDataSet
-#  credentials: rds_connection
-#  table_name: tbl_test
-#  layer: raw
 
 # dummy_data:
 #   type: spark.SparkDataSet
