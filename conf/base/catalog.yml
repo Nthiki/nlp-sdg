@@ -44,3 +44,24 @@ text_classification.dummy_data:
   # save_args:
   #   sep: '\t'
   #   overwrite: True
+
+sdg_text_data:
+  type: pandas.CSVDataSet
+  filepath: data/01_raw/train.csv
+  layer: raw
+
+cleaned_agreement_data:
+  type: pandas.CSVDataSet
+  filepath: data/02_intermediate/cleaned_agreement.csv
+  layer: intermediate
+
+cleaned_text_data:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/cleaned_text.csv
+  layer: primary
+
+model_input_data:
+  type: pandas.CSVDataSet
+  filepath: data/05_model_input/model_input.csv
+  layer: model_input
+  
