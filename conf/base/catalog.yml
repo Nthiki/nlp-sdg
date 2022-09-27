@@ -48,3 +48,37 @@ text_classification.dummy_data:
   # save_args:
   #   sep: '\t'
   #   overwrite: True
+
+
+#sdg text data for tutorial example
+sdg_text_data:
+  type: pandas.CSVDataSet
+  filepath: data/01_raw/train.csv
+  layer: raw
+  load_args:
+    sep: '\t'
+
+
+#The sdg text data after being cleaned with agreement score
+cleaned_agreement_data:
+  type: pandas.CSVDataSet
+  filepath: data/02_intermediate/cleaned_agreement_data.csv
+  layer: intermediate
+
+
+#processed SDG text data ready for ML model training
+sdg_model_input_table:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/sdg_model_input_table.csv
+  layer: primary
+
+
+# models
+
+classifier:
+  type: pickle.PickleDataSet
+  filepath: data/06_models/sdg_classifier.pickle
+  versioned: true
+  layer: models
+
+
