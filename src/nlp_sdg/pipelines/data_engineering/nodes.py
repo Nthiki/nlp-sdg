@@ -6,61 +6,10 @@ from typing import Dict
 import numpy as np
 import pandas as pd
 from pyspark.sql import DataFrame
-
-#NLTK library
-import nltk
 import texthero as hero
 from nltk.corpus import stopwords
 from nltk.corpus import stopwords, wordnet
 from nltk.stem import WordNetLemmatizer
-
-
-''' ================================== 
-
- Dummy code
-
- ==================================== '''
-
-
-def dummy_node(data: DataFrame) -> DataFrame:
-    
-    """Dummy node to read data
-
-    Args:
-        data: Data containing features and target.
-    Returns:
-        data.
-    """
-
-
-    return data
-
-    
-
-''' ================================== 
-
- Data engineering functions for Team A
-
- ==================================== '''
-
-
-
-
-
-''' ================================== 
-
- Data engineering functions for Team B
-
- ==================================== '''
-
-
-
-
-''' ================================== 
-
- Data engineering functions for Team C
-
- ==================================== '''
 
 
 def _clean_agreement(data: pd.DataFrame) -> pd.DataFrame:
@@ -185,5 +134,3 @@ def osdg_preprocessed_data(data: pd.DataFrame) -> pd.DataFrame:
     data = _data_balancing(data)
 
     return data
-
-
