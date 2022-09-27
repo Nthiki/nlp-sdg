@@ -11,7 +11,7 @@ def dummy_node(data):
     return 5
 
 def label_tweet(df: pd.DataFrame) -> pd.DataFrame:
-    '''function to predict sentiment using the Vader model
+    '''function to predict sentiments using the Vader model
     
     Args: dataframe
     '''
@@ -29,7 +29,7 @@ def label_tweet(df: pd.DataFrame) -> pd.DataFrame:
     def vader_analysis(compound):
     
         '''
-        Maps the sentiment based on sentiment score as 'positive', 'negative' and 'neutral'
+        Maps the sentiments based on sentiment score as 'positive', 'negative' and 'neutral'
         '''
         if compound >= 0.5:
             return 'Positive'
