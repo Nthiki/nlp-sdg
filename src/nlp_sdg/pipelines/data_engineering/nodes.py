@@ -19,3 +19,22 @@ def dummy_node(data: DataFrame) -> DataFrame:
 
 
     return data
+
+def clean_agreement(data:pd.DataFrame) -> DataFrame:
+    '''
+    This function takes in a dataframe and keeps rows
+    with positive labels more than negative labels
+    and has a high agreement score (>0.4)
+    
+    Args:
+        source training data
+        
+    Returns:
+        Filtered out data that has positive community agreement 
+        with SDG labels
+    '''
+
+    data = data.loc[(data['labels_negative'] < data['labels_positive']) & (data['agreement'] >= 0.4)]
+    print("success")
+
+    return data
