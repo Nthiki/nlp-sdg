@@ -5,7 +5,7 @@ generated using Kedro 0.18.2
 
 from kedro.pipeline import Pipeline, node, pipeline
 
-from nlp_sdg.pipelines.sdg_classification.nodes import dummy_node, split_data, vectorize_text, train_model
+from nlp_sdg.pipelines.sdg_classification.nodes import split_data, vectorize_text, train_model
 from nlp_sdg.pipelines.sdg_classification.nodes import evaluate_model
 
 
@@ -14,14 +14,8 @@ def create_pipeline(**kwargs) -> Pipeline:
         
         [
             node(
-                func=dummy_node,
-                inputs="model_input_data",
-                outputs="classification_output",
-                name="dummy_node_classification",
-            ),
-            node(
                 func=split_data,
-                inputs=["sdg_model_input_table", "parameters"],
+                inputs=["osdg_preprocessed_data", "parameters"],
                 outputs=["X_train", "X_test", "y_train", "y_test"],
                 name="split_data_node",
             ),
@@ -47,7 +41,7 @@ def create_pipeline(**kwargs) -> Pipeline:
     )
     text_classification = pipeline(
         pipe=pipeline_instance,
-        inputs=["model_input_data","sdg_model_input_table"],
+        inputs="osdg_preprocessed_data",
         namespace = "text_classification"
     )
     return text_classification
