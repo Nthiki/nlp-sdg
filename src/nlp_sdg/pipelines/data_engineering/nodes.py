@@ -8,6 +8,7 @@ import pandas as pd
 from pyspark.sql import DataFrame
 
 
+
 def dummy_node(data: DataFrame) -> DataFrame:
     """Dummy node to read data
 
@@ -16,6 +17,8 @@ def dummy_node(data: DataFrame) -> DataFrame:
     Returns:
         data.
     """
-
+    print("="*20)
+    print("IDNumber", data["IDNumber"].values)
+    print("="*20)
 
     return data
