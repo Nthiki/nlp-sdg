@@ -5,7 +5,7 @@ generated using Kedro 0.18.2
 
 from kedro.pipeline import Pipeline, node, pipeline
 
-from nlp_sdg.pipelines.data_engineering.nodes import dummy_node
+from nlp_sdg.pipelines.data_engineering.nodes import convert_to_csv, dummy_node
 
 
 
@@ -14,7 +14,7 @@ def create_pipeline(**kwargs) -> Pipeline:
         
         [
             node(
-                func=dummy_node,
+                func=convert_to_csv,
                 inputs="test_data",
                 outputs= "confirm_data",
                 name= "confirm_data_node",

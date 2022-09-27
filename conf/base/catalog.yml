@@ -48,9 +48,10 @@ text_classification.dummy_data:
 test_data:
   type: pandas.SQLTableDataSet
   credentials: rds_connection
-  table_name: tbl_test
+  table_name: shell_webscraped_articles
   save_args:
     if_exists: replace
 
-data_engineering.confirm_data:
-  type: MemoryDataSet
+confirm_data:
+  type: pandas.CSVDataSet
+  file_path: C:\Users\Kiosk\Documents\GitHub\nlp-sdg\data\01_raw\confirm_data.csv
