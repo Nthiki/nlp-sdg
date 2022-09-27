@@ -7,27 +7,87 @@ from typing import Dict
 import numpy as np
 import pandas as pd
 from pyspark.sql import DataFrame
-import re
 
-# libraries for NLP
-#pip install nltk
-import nltk
-nltk.download('wordnet')
-nltk.download('omw-1.4')
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-nltk.download('stopwords')
-from nltk.tokenize import word_tokenize
-from nltk import pos_tag
-from nltk.corpus import wordnet
-from nltk.corpus import stopwords
-from nltk import SnowballStemmer, PorterStemmer, LancasterStemmer
-from nltk.stem import WordNetLemmatizer
+def _clean_agreement(data: pd.DataFrame) -> pd.DataFrame:
+    '''
+    This function takes in a dataframe and filters out the rows with negative label higher than positive label,
+    and have an agreement score less than 0.4
+    
+    Args: 
+        Source training data
+        
+    Returns:
+        Filtered data that has high positive community agreement with SDG labels
+        
+        
+    '''
+    data = data.loc[(data['labels_negative'] < data['labels_positive']) & (data['agreement'] >= 0.4)]
+    return data
 
 
-def dummy_node(data: DataFrame) -> DataFrame:
-    """Dummy node to read data
+def _missing_data(df: pd.DataFrame) ->pd.DataFrame:
+    """
+    This function takes in a dataframe and filters out the rows with missing data
+    
+    Args: 
+        Source training data
+        
+    Returns:
+        Data without missing cells
 
+    """
+    df1 = df.dropna(subset=['text'])
+    df2 = df1.dropna(subset=['sdg'])
+    return df2
+
+
+def _clean_article(text: str) -> str:
+    
+    """Converts apostrophe suffixes to words, replace webpage links with url, annotate 
+    hashtags and mentions, remove a selection of punctuation, and convert all words to lower case.
+    Args:
+        text: 'text' article or sentence to be cleaned
+    Returns:
+        clean_text: clean text rid of noise 
+    """
+    text = re.sub(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|\
+                      (?:%[0-9a-fA-F][0-9a-fA-F]))+', '', text)
+    text = hero.clean(pd.Series(text))[0]  
+    return text
+
+
+def _lemmatize(text: str) -> str:
+    """This function is responsible for Lemmatization of the text.
+    Args:
+        text (String): sentence containing 'text' to lemmatize (stemming)
+    Returns:
+        text (String): sentence with converted 'text' into lemmatized word(s)  
+    """
+    # removing any form of hyper link(s)
+    stop_words = stopwords.words('english')
+    lemmatizer = WordNetLemmatizer()
+    text = text.lower()
+    text = [lemmatizer.lemmatize(word) for word in text.split() if word not in stop_words and len(word)>2]
+    return ' '.join(text)
+
+
+# Creating a function to upscale and balance the dataset
+def _data_balancing(df_input: pd.DataFrame) -> pd.DataFrame:
+    """
+        Dataset balancing for all target variable to be equal in frequency.
+    Args:
+        `df` (DataFrame): pd.Series containing the target variable
+    Return:
+        df (DataFrame): dataframe with resample and balance dataset by upscaling.
+    """
+    text = re.sub(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|\
+                      (?:%[0-9a-fA-F][0-9a-fA-F]))+', '', text)
+    text = hero.clean(pd.Series(text))[0]  
+    return text
+
+
+def _lemmatize(text: str) -> str:
+    """This function is responsible for Lemmatization of the text.
     Args:
         data: Data containing features and target.
     Returns:
@@ -36,78 +96,3 @@ def dummy_node(data: DataFrame) -> DataFrame:
 
 
     return data
-
-
-def data_preprocessing(df:pd.DataFrame)->pd.DataFrame:
-    '''
-    Function takes in the whole dataframe and carries out the following preprocessing steps:
-    
-    1. General text cleaning
-    2. Part of Speech tagging
-    3. Lemmatization
-    
-    Then return the dataframe
-    '''
-    def clean_tweet(tweet):
-        '''
-        tweet: String
-               Input Data
-        tweet: String
-               Output Data
-
-        func: Removes hashtag symbol in front of a word
-              Replace URLs with a space in the message
-              Replace ticker symbols with space. The ticker symbols are any stock symbol that starts with $.
-              Replace  usernames with space. The usernames are any word that starts with @.
-              Replace everything not a letter or apostrophe with space
-              Remove single letter words
-              filter all the non-alphabetic words, then join them again
-
-        '''
-    
-        tweet = re.sub(r'#([^\s]+)', r'\1', tweet)
-
-        tweet = re.sub('\$[a-zA-Z0-9]*', ' ', tweet)
-        tweet = re.sub('https?:\/\/[a-zA-Z0-9@:%._\/+~#=?&;-]*', ' ', tweet)
-        tweet = re.sub('\@[a-zA-Z0-9]*', ' ', tweet)
-        tweet = re.sub('[^a-zA-Z\']', ' ', tweet)
-        tweet = re.sub(r'\s+', " ", tweet)
-        tweet = ' '.join( [w for w in tweet.split() if len(w)>1] )
-    
-        return tweet
-    
-    def token_stop_pos(text):
-        '''
-        Maps the part of speech to words in sentences giving consideration to words that are nouns, verbs, 
-        adjectives and adverbs
-        '''
-        pos_dict = {'J':wordnet.ADJ, 'V':wordnet.VERB, 'N':wordnet.NOUN, 'R':wordnet.ADV}
-        tags = pos_tag(word_tokenize(text))
-        newlist = []
-        for word, tag in tags:
-            if word.lower() not in set(stopwords.words('english')):
-                newlist.append(tuple([word, pos_dict.get(tag[0])]))
-        return newlist
-    
-    def lemmatize(pos_data):
-        '''
-        Performs lemmatization on tokens based on its part of speech tagging 
-        '''
-        wordnet_lemmatizer = WordNetLemmatizer()
-        lemma_rew = " "
-        for word, pos in pos_data:
-            if not pos:
-                lemma = word
-                lemma_rew = lemma_rew + " " + lemma
-            else:
-                lemma = wordnet_lemmatizer.lemmatize(word, pos=pos)
-                lemma_rew = lemma_rew + " " + lemma
-        return lemma_rew
-    
-    
-    df['clean_text'] = df['Text'].apply(lambda x:clean_tweet(x))
-    df['POS tagged'] = df['clean_text'].apply(token_stop_pos)
-    df['Lemma'] = df['POS tagged'].apply(lemmatize)
-    print('success!')
-    
-    return df

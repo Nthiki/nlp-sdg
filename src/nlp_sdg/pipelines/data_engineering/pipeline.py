@@ -5,7 +5,9 @@ generated using Kedro 0.18.2
 
 from kedro.pipeline import Pipeline, node, pipeline
 
-from nlp_sdg.pipelines.data_engineering.nodes import dummy_node, data_preprocessing
+
+from nlp_sdg.pipelines.data_engineering.nodes import osdg_preprocessed_data
+
 
 
 
@@ -14,10 +16,10 @@ def create_pipeline(**kwargs) -> Pipeline:
         
         [
             node(
-                func=dummy_node,
+                func=osdg_preprocessed_data,
                 inputs="sdg_data",
-                outputs="model_input_data",
-                name="dummy_node",
+                outputs="osdg_preprocessed_data",
+                name="osdg_preprocess_data_node",
             ),
             node(
                 func= data_preprocessing,
@@ -29,8 +31,8 @@ def create_pipeline(**kwargs) -> Pipeline:
     )
     data_engineering = pipeline(
         pipe=pipeline_instance,
-        inputs=["sdg_data", "tweet_text_data"],
+        inputs= "sdg_data",
         namespace = "data_engineering",
-        outputs = ["model_input_data","clean_tweet_data"]
+        outputs = "osdg_preprocessed_data",
     )
     return data_engineering
