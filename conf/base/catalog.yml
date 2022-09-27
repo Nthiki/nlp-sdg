@@ -44,7 +44,15 @@ clean_tweet_data:
   filepath: data/01_intermediate/clean_tweets.csv
   layer: intermediate
   
+twitter_label_data:
+  type: pandas.CSVDataSet
+  filepath: data/01_raw/tweets_2.csv
+  layer: raw
 
+clean_label_data:
+  type: pandas.CSVDataSet
+  filepath: data/01_intermediate/clean_tweets.csv
+  layer: intermediate
 
 # dummy_data:
 #   type: spark.SparkDataSet
