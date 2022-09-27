@@ -25,4 +25,4 @@ numexpr
 sklearn
 scipy
 psycopg2
-
+nltk
