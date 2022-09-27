@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 from pyspark.sql import DataFrame
 from nltk.stem import WordNetLemmatizer
+from sklearn.utils import resample
 
 
 def dummy_node(data: DataFrame) -> DataFrame:
@@ -45,9 +46,9 @@ def clean_text(data:pd.DataFrame) -> DataFrame:
     """Converts apostrophe suffixes to words, replace webpage links with url, 
     annotate hashtags and mentions, remove a selection of punctuation, and convert all words to lower case.
     Args:
-        df (DataFrame): dataframe containing 'text' column to convert
+        data (DataFrame): dataframe containing 'text' column to convert
     Returns:
-        df (DataFrame): dataframe with converted 'text' column 
+        data (DataFrame): dataframe with converted 'text' column 
     """
     def word_lemma(words):
         lemmatizer = WordNetLemmatizer()
@@ -63,6 +64,9 @@ def clean_text(data:pd.DataFrame) -> DataFrame:
                     10: "Reduced Inequality", 13: "Climate Action", 11: "Sustainable cites and communities", 12: "Responsible consumption and production", 14: "life below water", 15: "Life on land", 16: "Peace , Justice and strong institutions", 17: "Partnership for the goals"}
         df['SDG_Labels'] = df['sdg'].map(sdgLables)
 
+    # drop empty rows
+    data = data.dropna(subset=['text'])
+    data = data.dropna(subset=['sdg'])
     #Lower case
     data["text"] = data["text"].str.lower()
     #Removal of Punctuation
@@ -72,3 +76,38 @@ def clean_text(data:pd.DataFrame) -> DataFrame:
     sdglabler(data)
 
     return data
+
+def data_balancing(data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Dataset balancing for all target variable to be equal in frequency.
+    Args:
+        data (DataFrame): pd.Series containing the target variable
+    Return:
+        data (DataFrame): dataframe with resample and balance dataset by upscaling.
+    """
+    df = data.copy()
+    # setting the maximum resample size to mean of categories in 'sdg'
+    class_size = int(df.sdg.value_counts().mean()) 
+
+    target_size = df.sdg.value_counts() # getting category name and their size
+    appended_target = [] # creating an empty list to append all category after resampling
+
+    # Creating a for-loop to resample and append to a list
+    for index, size in target_size.items():
+        if size < class_size: # setting condition to check if to downsample or upsample
+            temp_pd = resample(df[df['sdg']==index],
+                              replace=True, # sample with replacement
+                              n_samples=class_size, # match number in resample class
+                              random_state=27)
+        else:
+            temp_pd = resample(df[df['sdg']==index],
+                              replace=False, # sample without replacement (no need to duplicate observations)
+                              n_samples=class_size, # match number in resample class
+                              random_state=27)
+        # Appending each category after resampling
+        appended_target.append(temp_pd)
+        
+    # Creating a new dataframe and viewing
+    df_resampled = pd.concat(appended_target, axis=0)
+    
+    return df_resampled
