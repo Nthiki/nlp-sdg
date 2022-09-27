@@ -54,3 +54,8 @@ cleaned_agreement_data:
   type: pandas.CSVDataSet
   filepath: data/02_intermediate/cleaned_agreement.csv
   layer: intermediate
+
+cleaned_text_data:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/cleaned_text.csv
+  layer: primary
