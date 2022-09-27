@@ -3,10 +3,13 @@ This is a boilerplate pipeline 'data_engineering'
 generated using Kedro 0.18.2
 """
 from typing import Dict
+import re
 import numpy as np
 import pandas as pd
 from pyspark.sql import DataFrame
 import texthero as hero
+
+#nltk library
 from nltk.corpus import stopwords
 from nltk.corpus import stopwords, wordnet
 from nltk.stem import WordNetLemmatizer
@@ -131,6 +134,6 @@ def osdg_preprocessed_data(data: pd.DataFrame) -> pd.DataFrame:
     #clean_agreement
     data = _clean_agreement(data)
     # Resampling the dataset to balance each target
-    data = _data_balancing(data)
+    #data = _data_balancing(data)
 
     return data

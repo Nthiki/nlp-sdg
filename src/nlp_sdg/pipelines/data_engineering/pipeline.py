@@ -5,7 +5,7 @@ generated using Kedro 0.18.2
 
 from kedro.pipeline import Pipeline, node, pipeline
 
-from nlp_sdg.pipelines.data_engineering.nodes import dummy_node, clean_agreement, preprocess_sdg_data
+from nlp_sdg.pipelines.data_engineering.nodes import osdg_preprocessed_data
 
 
 

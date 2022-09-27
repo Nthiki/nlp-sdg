@@ -21,17 +21,6 @@ from sklearn.calibration import CalibratedClassifierCV
 
 ''' ================================== 
 
- Dummy code
-
- ==================================== '''
-
-def dummy_node(data):
-    print("Text Classification dummy node completed")
-    return 5
-
-
-''' ================================== 
-
      Data Science training
 
  ==================================== '''
