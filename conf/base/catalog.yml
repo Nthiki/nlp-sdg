@@ -20,6 +20,10 @@ sdg_data:
   save_args:
     sep: '\t'
 
+osdg_preprocessed_data:
+  type: pandas.CSVDataSet
+  filepath: data/02_intermediate/osdg_preprocessed_data.csv
+
 model_input_data:
   type: MemoryDataSet
 
