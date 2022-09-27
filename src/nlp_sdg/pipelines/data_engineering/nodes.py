@@ -41,6 +41,7 @@ def _missing_data(df: pd.DataFrame) ->pd.DataFrame:
         
     Returns:
         Data without missing cells
+
     """
     df1 = df.dropna(subset=['text'])
     df2 = df1.dropna(subset=['sdg'])
