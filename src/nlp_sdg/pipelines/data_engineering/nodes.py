@@ -112,7 +112,7 @@ def _data_balancing(df_input: pd.DataFrame) -> pd.DataFrame:
     return df_resampled
 
 
-def preprocessed_data(data: pd.DataFrame) -> pd.DataFrame:
+def osdg_preprocessed_data(data: pd.DataFrame) -> pd.DataFrame:
     '''
      This function applies all the above functions to the dataframe to make it preprocessed data.
     
