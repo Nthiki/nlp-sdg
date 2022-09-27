@@ -8,7 +8,9 @@ import pandas as pd
 from pyspark.sql import DataFrame
 from nltk.stem import WordNetLemmatizer
 from sklearn.utils import resample
-
+import nltk
+nltk.download('wordnet')
+nltk.download('omw-1.4')
 
 def dummy_node(data: DataFrame) -> DataFrame:
     """Dummy node to read data
