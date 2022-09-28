@@ -5,11 +5,16 @@ generated using Kedro 0.18.2
 from typing import Dict
 import numpy as np
 import pandas as pd
+import re
 from pyspark.sql import DataFrame
 import texthero as hero
+import nltk
 from nltk.corpus import stopwords
 from nltk.corpus import stopwords, wordnet
 from nltk.stem import WordNetLemmatizer
+nltk.download('wordnet')
+nltk.download('stopwords')
+nltk.download('omw-1.4')
 
 
 def _clean_agreement(data: pd.DataFrame) -> pd.DataFrame:
@@ -84,11 +89,6 @@ def _data_balancing(df_input: pd.DataFrame) -> pd.DataFrame:
     Return:
         df (DataFrame): dataframe with resample and balance dataset by upscaling.
     """
-<<<<<<< HEAD
-    print("="*20)
-    print("IDNumber", data["IDNumber"].values)
-    print("="*20)
-=======
     text = re.sub(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|\
                       (?:%[0-9a-fA-F][0-9a-fA-F]))+', '', text)
     text = hero.clean(pd.Series(text))[0]  
@@ -167,7 +167,6 @@ def osdg_preprocessed_data(data: pd.DataFrame) -> pd.DataFrame:
     #clean_agreement
     data = _clean_agreement(data)
     # Resampling the dataset to balance each target
-    data = _data_balancing(data)
->>>>>>> d924856366587e85714675f895f2cdac99573221
+    #data = _data_balancing(data)
 
     return data

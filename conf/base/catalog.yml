@@ -9,22 +9,23 @@
 # (transcoding), templating and a way to reuse arguments that are frequently repeated. See more here:
 # https://kedro.readthedocs.io/en/stable/data/data_catalog.html
 #
-# sdg_data:
-#   type: spark.SparkDataSet
-#   filepath: data/01_raw/train.csv
-#   file_format: csv
-#   #credentials: dev_s3
-#   load_args:
-#     header: True
-#     inferSchema: True
-#   save_args:
-#     sep: '\t'
+#sdg_data:
+#  type: spark.SparkDataSet
+#  filepath: data/01_raw/train.csv
+#  file_format: csv
+  #credentials: dev_s3
+#  load_args:
+#    header: True
+#    inferSchema: True
+#  save_args:
+#    sep: '\t'
 
 sdg_data:
   type: pandas.CSVDataSet
   filepath: data/01_raw/train.csv
-  sep: '\t'
-
+  layer: raw
+  load_args:
+    sep: '\t'
 
 osdg_preprocessed_data:
   type: pandas.CSVDataSet
@@ -39,15 +40,12 @@ twitter_analytics.dummy_data:
 text_comprehension.dummy_data:
   type: MemoryDataSet
 
-text_classification.dummy_data:
-  type: MemoryDataSet
 
-
-rds_database:
-  type: pandas.SQLTableDataSet
-  credentials: rds_connection
-  table_name: tbl_test
-  layer: raw
+#rds_database:
+#  type: pandas.SQLTableDataSet
+#  credentials: rds_connection
+#  table_name: tbl_test
+#  layer: raw
 
 # dummy_data:
 #   type: spark.SparkDataSet
@@ -71,15 +69,9 @@ sdg_text_data:
     sep: '\t'
 
 
-#The sdg text data after being cleaned with agreement score
-cleaned_agreement_data:
-  type: pandas.CSVDataSet
-  filepath: data/02_intermediate/cleaned_agreement_data.csv
-  layer: intermediate
-
 
 #processed SDG text data ready for ML model training
-sdg_model_input_table:
+osdg_preprocessed_data:
   type: pandas.CSVDataSet
   filepath: data/03_primary/sdg_model_input_table.csv
   layer: primary

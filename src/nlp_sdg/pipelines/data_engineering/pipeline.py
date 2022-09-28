@@ -6,7 +6,7 @@ generated using Kedro 0.18.2
 from kedro.pipeline import Pipeline, node, pipeline
 
 
-from nlp_sdg.pipelines.data_engineering.nodes import osdg_preprocess_data
+from nlp_sdg.pipelines.data_engineering.nodes import osdg_preprocessed_data
 
 
 
