@@ -14,17 +14,17 @@ def create_pipeline(**kwargs) -> Pipeline:
         
         [
             node(
-                func=convert_to_csv,
-                inputs="test_data",
-                outputs= "confirm_data",
-                name= "confirm_data_node",
+                func=dummy_node,
+                inputs="raw_data",
+                outputs= "articles_data",
+                name= "articles_data_node",
             )
         ]
     )
     data_engineering = pipeline(
         pipe=pipeline_instance,
-        inputs= "test_data",
+        inputs= "raw_data",
         namespace = "data_engineering",
-        outputs = "confirm_data"
+        outputs = "articles_data"
     )
     return data_engineering

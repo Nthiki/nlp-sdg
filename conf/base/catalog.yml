@@ -45,13 +45,21 @@ text_classification.dummy_data:
   #   sep: '\t'
   #   overwrite: True
 
-test_data:
+raw_data:
   type: pandas.SQLTableDataSet
   credentials: rds_connection
   table_name: shell_webscraped_articles
   save_args:
     if_exists: replace
 
-confirm_data:
+articles_data:
   type: pandas.CSVDataSet
-  file_path: C:\Users\Kiosk\Documents\GitHub\nlp-sdg\data\01_raw\confirm_data.csv
+  filepath: /home/kedro/data/01_raw/articles.csv
+
+S3_data:
+  type: pandas.CSVDataSet
+  filepath: s3://internship-sdg-2022/kedro/data/01_raw/
+  #credentials: 
+  load_args:
+    sep: ','
+    na_values: ['#NA', NA]

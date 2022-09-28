@@ -21,7 +21,7 @@ def dummy_node(data: DataFrame) -> DataFrame:
     return data
 
 
-def convert_to_csv(data: DataFrame) -> DataFrame:
+def convert_to_csv(data : DataFrame) -> DataFrame:
     connection = sqlite3.connect(data)
     cursor = connection.cursor()
     
