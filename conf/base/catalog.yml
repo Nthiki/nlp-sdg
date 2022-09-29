@@ -37,15 +37,17 @@ model_input_data:
 twitter_analytics.dummy_data:
   type: MemoryDataSet
 
-text_comprehension.dummy_data:
+text_comprehension.summarized_text_data:
   type: MemoryDataSet
 
 
-#rds_database:
-#  type: pandas.SQLTableDataSet
-#  credentials: rds_connection
-#  table_name: tbl_test
-#  layer: raw
+rds_articles:
+  type: pandas.SQLTableDataSet
+  credentials: rds_connection
+  table_name: shell_webscraped_articles
+  layer: raw
+  save_args:
+    if_exists: replace
 
 # dummy_data:
 #   type: spark.SparkDataSet
