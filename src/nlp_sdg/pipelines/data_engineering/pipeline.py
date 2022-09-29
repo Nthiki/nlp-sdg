@@ -18,13 +18,19 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs="raw_data",
                 outputs= "articles_data",
                 name= "articles_data_node",
+            ),
+            node(
+                func=dummy_node,
+                inputs="S3_bucket",
+                outputs= "S3_data",
+                name= "s3_data_node",
             )
         ]
     )
     data_engineering = pipeline(
         pipe=pipeline_instance,
-        inputs= "raw_data",
+        inputs= ["raw_data","S3_bucket"],
         namespace = "data_engineering",
-        outputs = "articles_data"
+        outputs = ["articles_data","S3_data"]
     )
     return data_engineering

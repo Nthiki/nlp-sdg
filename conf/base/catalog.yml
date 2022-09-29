@@ -56,10 +56,14 @@ articles_data:
   type: pandas.CSVDataSet
   filepath: /home/kedro/data/01_raw/articles.csv
 
-S3_data:
+S3_bucket:
   type: pandas.CSVDataSet
-  filepath: s3://internship-sdg-2022/kedro/data/01_raw/
-  #credentials: 
+  filepath: s3://internship-sdg-2022/kedro/data/01_raw/train.csv
+  credentials: s3_connection
   load_args:
     sep: ','
     na_values: ['#NA', NA]
+
+S3_data:
+  type: pandas.CSVDataSet
+  filepath: /home/kedro/data/01_raw/s3test.csv
