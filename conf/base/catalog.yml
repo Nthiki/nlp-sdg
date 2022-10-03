@@ -41,17 +41,12 @@ tweet_text_data:
 
 clean_tweet_data:
   type: pandas.CSVDataSet
-  filepath: data/01_intermediate/clean_tweets.csv
+  filepath: data/02_intermediate/clean_tweet_data.csv
   layer: intermediate
   
-twitter_label_data:
-  type: pandas.CSVDataSet
-  filepath: data/01_raw/tweets_2.csv
-  layer: raw
-
 clean_label_data:
   type: pandas.CSVDataSet
-  filepath: data/01_intermediate/clean_tweets.csv
+  filepath: data/02_intermediate/clean_label_data.csv
   layer: intermediate
 
 # dummy_data:
