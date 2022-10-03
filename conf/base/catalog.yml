@@ -27,18 +27,14 @@ sdg_data:
   load_args:
     sep: '\t'
 
-osdg_preprocessed_data:
-  type: pandas.CSVDataSet
-  filepath: data/02_intermediate/osdg_preprocessed_data.csv
+#model_input_data:
+#  type: MemoryDataSet
 
-model_input_data:
-  type: MemoryDataSet
+#twitter_analytics.dummy_data:
+#  type: MemoryDataSet
 
-twitter_analytics.dummy_data:
-  type: MemoryDataSet
-
-text_comprehension.dummy_data:
-  type: MemoryDataSet
+#text_comprehension.dummy_data:
+#  type: MemoryDataSet
 
 
 #rds_database:
@@ -73,15 +69,24 @@ sdg_text_data:
 #processed SDG text data ready for ML model training
 osdg_preprocessed_data:
   type: pandas.CSVDataSet
-  filepath: data/03_primary/sdg_model_input_table.csv
+  filepath: data/03_primary/osdg_preprocessed_data.csv
   layer: primary
+  load_args:
+    sep: ','
 
 
-# models
 
-classifier:
+# models - when using a namespace we need to use the following format
+
+text_classification.sdg_classifier:
   type: pickle.PickleDataSet
   filepath: data/06_models/sdg_classifier.pickle
+  versioned: true
+  layer: models
+
+text_classification.vectorizer:
+  type: pickle.PickleDataSet
+  filepath: data/06_models/vectorizer.pickle
   versioned: true
   layer: models
 
