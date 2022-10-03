@@ -2,12 +2,7 @@
 This is a boilerplate pipeline 'twitter_analytics'
 generated using Kedro 0.18.2
 """
-from typing import List, Dict
 import pandas as pd
-import numpy as np
-import logging
-
-#sentiment analysis
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 #this is a dummy- node
