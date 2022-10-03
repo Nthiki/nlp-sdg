@@ -20,7 +20,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             ),
             node(
                 func=label_tweet,
-                inputs="twitter_label_data",
+                inputs="clean_tweet_data",
                 outputs="clean_label_data",
                 name="label_node",
             )
@@ -28,8 +28,8 @@ def create_pipeline(**kwargs) -> Pipeline:
         ]
     )
     twitter_analytics = pipeline(
-        pipe=pipeline_instance,
-        inputs=["model_input_data", "twitter_label_data"],  
+        pipe= pipeline_instance,
+        inputs=["model_input_data", "clean_tweet_data"],  
         outputs=["analytics_output", "clean_label_data"],
         namespace = "twitter_analytics"
     )
