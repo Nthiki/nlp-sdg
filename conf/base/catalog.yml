@@ -9,22 +9,16 @@
 # (transcoding), templating and a way to reuse arguments that are frequently repeated. See more here:
 # https://kedro.readthedocs.io/en/stable/data/data_catalog.html
 #
-# sdg_data:
-#   type: spark.SparkDataSet
-#   filepath: data/01_raw/train.csv
-#   file_format: csv
-#   #credentials: dev_s3
-#   load_args:
-#     header: True
-#     inferSchema: True
-#   save_args:
-#     sep: '\t'
-
-# rds_data:
-#   type: pandas.SQLTableDataSet
-#   sql:  SELECT id, "Datetime", "Tweet_Id", "Username", "Verified", "Location", "Reply_Count", "Retweet_Count", "Like_Count", "Quote_Count", text_without_punctuations, hashtags FROM public.twitter_stream
-#   credentials: rds_connection
-#   layer: raw
+sdg_data:
+  type: spark.SparkDataSet
+  filepath: data/01_raw/train.csv
+  file_format: csv
+  #credentials: dev_s3
+  load_args:
+    header: True
+    inferSchema: True
+  save_args:
+    sep: '\t'
 
 model_input_data:
   type: MemoryDataSet
@@ -38,6 +32,29 @@ text_comprehension.dummy_data:
 text_classification.dummy_data:
   type: MemoryDataSet
 
+tweet_text_data:
+  type: pandas.CSVDataSet
+  filepath: data/01_raw/tweets_2.csv
+  layer: raw
+  #load_args:
+    #sep: '/t'
+
+clean_tweet_data:
+  type: pandas.CSVDataSet
+  filepath: data/02_intermediate/clean_tweet_data.csv
+  layer: intermediate
+  
+clean_label_data:
+  type: pandas.CSVDataSet
+  filepath: data/02_intermediate/clean_label_data.csv
+  layer: intermediate
+
+rds_data:
+  type: pandas.SQLTableDataSet
+  credentials: rds_connection
+  table_name: twitter_stream
+  save_args:
+    if_exists: replace
 
 # dummy_data:
 #   type: spark.SparkDataSet
@@ -51,11 +68,3 @@ text_classification.dummy_data:
   #   sep: '\t'
   #   overwrite: True
 
-
-
-rds_data:
-  type: pandas.SQLTableDataSet
-  credentials: rds_connection
-  table_name: twitter_stream
-  save_args:
-    if_exists: replace
