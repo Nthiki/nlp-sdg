@@ -9,16 +9,22 @@
 # (transcoding), templating and a way to reuse arguments that are frequently repeated. See more here:
 # https://kedro.readthedocs.io/en/stable/data/data_catalog.html
 #
-sdg_data:
-  type: spark.SparkDataSet
-  filepath: data/01_raw/train.csv
-  file_format: csv
-  #credentials: dev_s3
-  load_args:
-    header: True
-    inferSchema: True
-  save_args:
-    sep: '\t'
+# sdg_data:
+#   type: spark.SparkDataSet
+#   filepath: data/01_raw/train.csv
+#   file_format: csv
+#   #credentials: dev_s3
+#   load_args:
+#     header: True
+#     inferSchema: True
+#   save_args:
+#     sep: '\t'
+
+# rds_data:
+#   type: pandas.SQLTableDataSet
+#   sql:  SELECT id, "Datetime", "Tweet_Id", "Username", "Verified", "Location", "Reply_Count", "Retweet_Count", "Like_Count", "Quote_Count", text_without_punctuations, hashtags FROM public.twitter_stream
+#   credentials: rds_connection
+#   layer: raw
 
 model_input_data:
   type: MemoryDataSet
@@ -44,3 +50,12 @@ text_classification.dummy_data:
   # save_args:
   #   sep: '\t'
   #   overwrite: True
+
+
+
+rds_data:
+  type: pandas.SQLTableDataSet
+  credentials: rds_connection
+  table_name: twitter_stream
+  save_args:
+    if_exists: replace

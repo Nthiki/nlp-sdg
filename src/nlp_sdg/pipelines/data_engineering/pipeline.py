@@ -15,7 +15,7 @@ def create_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func=dummy_node,
-                inputs="sdg_data",
+                inputs="rds_data",
                 outputs="model_input_data",
                 name="dummy_node",
             ),
@@ -23,7 +23,7 @@ def create_pipeline(**kwargs) -> Pipeline:
     )
     data_engineering = pipeline(
         pipe=pipeline_instance,
-        inputs="sdg_data",
+        inputs="rds_data",
         namespace = "data_engineering",
         outputs = "model_input_data"
     )
