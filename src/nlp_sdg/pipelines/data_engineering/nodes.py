@@ -161,9 +161,9 @@ def osdg_preprocessed_data(data: pd.DataFrame) -> pd.DataFrame:
     # removing missing rows in the important columns
     data = _missing_data(data)
     #apply text hero
-    data['text'] = data['text'].apply(_clean_article)
+    data['clean_text'] = data['text'].apply(_clean_article)
     #lemmatize the text
-    data['text'] = data['text'].apply(_lemmatize)
+    data['clean_text'] = data['text'].apply(_lemmatize)
     #clean_agreement
     data = _clean_agreement(data)
     # Resampling the dataset to balance each target
