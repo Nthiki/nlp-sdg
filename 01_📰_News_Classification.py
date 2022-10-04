@@ -2,6 +2,7 @@ import streamlit as st
 import plotly.express as px
 import numpy as np 
 import pandas as pd
+import time
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 from kedro.io import DataCatalog
@@ -33,10 +34,8 @@ st.sidebar.markdown("# This feature classifies new articles")
 classifier = io.load("sdg_classifier")
 vectorizer = io.load("vectorizer")
 
+#load in data
 
-#st.write(classifier)
-
-st.title('UN SDG Internship Project')
 @st.experimental_memo
 #@st.cache
 def load_data(data_name):
@@ -52,34 +51,78 @@ data = load_data("osdg_preprocessed_data")
 # Notify the reader that the data was successfully loaded.
 data_load_state.text("")
 
+#helper functions
 
-df = data.copy()
-df_new = data[11:13]
+#need functions that clean incoming data
+
+def clean_text_data(my_text):
+
+    doc = list(my_text.split(" "))
+
+    return my_text
+
+def df_text_predict(df_upload):
+    X = df_upload['text'].values
+    #X_tfidf = vectorizer.transform(X) # need to clean data (remove numbers etc)
+    #predicted = classifier.predict(X_tfidf)
+    if predicted[0] == 1:
+        return "This is SDG label 1"
+    else:
+        return "This is not SDG label 1"
+
+def text_predict(my_text):
+    doc = list(my_text.split(" "))
+    doc = vectorizer.transform(doc)
+    predicted = classifier.predict(doc)
+    if predicted[0] == 1:
+        return "This is SDG label 1"
+    else:
+        return "This is not SDG label 1"
+
+#main function
+
+def main():
+    st.title('UN SDG Internship Project')
+    st.markdown('## News article classification')
+    
+    message1 = st.text_area("Please Enter News article", "Type Here")
+    if st.button("Detect SDG"):
+        with st.spinner('Running model...'):
+            time.sleep(1)
+        #clean_message = clean_text(message1)
+        result1 = text_predict(message1)
+        st.success(result1)
+
+    uploaded_file = st.file_uploader("Upload csv file containing news article data")
+    if uploaded_file is not None:
+        
+        # Can be used wherever a "file-like" object is accepted:
+        dataframe = pd.read_csv(uploaded_file)
+        st.write(dataframe)
+
+        if st.button('Predict SDG'):
+            result2 = df_text_predict(message1)
+            st.success(result2)
+
+     
+    
+
+if __name__ == '__main__':
+    main()
+
+
+#df = data.copy()
+#df_new = data[11:13]
 
 #Fit to ALL original train data and transform new data
-X_tfidf = vectorizer.fit_transform(df['clean_text'])
-X_new_tfidf = vectorizer.transform(df_new['clean_text'])
-
-#predictions
-st.markdown('Predictions')
-y_pred = classifier.predict(X_new_tfidf)
-
-st.write(y_pred)
-
-st.subheader('Select news article')
-option = st.selectbox(
-    'Select a news article',
-    ('Shell goes under', 'Coastal woes in Durban', 'CEO of Shell steps down'))
-
-st.write('You selected:', option)
+#X_tfidf = vectorizer.fit_transform(df['clean_text'])
+#X_new_tfidf = vectorizer.transform(df_new['clean_text'])
 
 #When we select an article, is it possible to show the article?
 
-st.dataframe(df)
+#st.dataframe(df)
 
-# Histogram of SDG label distribution
-
-
+st.header('EDA')
 st.subheader('Training data set')
 st.markdown('##### SDG label distribution')
 
