@@ -49,12 +49,20 @@ clean_label_data:
   filepath: data/02_intermediate/clean_label_data.csv
   layer: intermediate
 
-rds_data:
+fetch_record_query:
+  type: pandas.SQLQueryDataSet
+  credentials: rds_connection_credentials
+  sql: SELECT * FROM public.twitter_stream LIMIT 100
+  
+
+rds_connection:
   type: pandas.SQLTableDataSet
-  credentials: rds_connection
+  credentials: rds_connection_credentials
   table_name: twitter_stream
   save_args:
     if_exists: replace
+
+
 
 # dummy_data:
 #   type: spark.SparkDataSet

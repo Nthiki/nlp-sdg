@@ -24,6 +24,10 @@ from nltk.corpus import stopwords
 from nltk import SnowballStemmer, PorterStemmer, LancasterStemmer
 from nltk.stem import WordNetLemmatizer
 
+# libraries used for scrapping tweets
+from datetime import date,timedelta,datetime
+import snscrape.modules.twitter as sntwitter
+import time 
 
 def dummy_node(data: DataFrame) -> DataFrame:
     """Dummy node to read data
@@ -37,18 +41,7 @@ def dummy_node(data: DataFrame) -> DataFrame:
 
     return data
 
-
-def data_preprocessing(df:pd.DataFrame)->pd.DataFrame:
-    '''
-    Function takes in the whole dataframe and carries out the following preprocessing steps:
-    
-    1. General text cleaning
-    2. Part of Speech tagging
-    3. Lemmatization
-    
-    Then return the dataframe
-    '''
-    def clean_tweet(tweet):
+def clean_tweet(tweet):
         '''
         tweet: String
                Input Data
@@ -75,8 +68,8 @@ def data_preprocessing(df:pd.DataFrame)->pd.DataFrame:
         tweet = ' '.join( [w for w in tweet.split() if len(w)>1] )
     
         return tweet
-    
-    def token_stop_pos(text):
+
+def token_stop_pos(text):
         '''
         Maps the part of speech to words in sentences giving consideration to words that are nouns, verbs, 
         adjectives and adverbs
@@ -88,8 +81,8 @@ def data_preprocessing(df:pd.DataFrame)->pd.DataFrame:
             if word.lower() not in set(stopwords.words('english')):
                 newlist.append(tuple([word, pos_dict.get(tag[0])]))
         return newlist
-    
-    def lemmatize(pos_data):
+
+def lemmatize(pos_data):
         '''
         Performs lemmatization on tokens based on its part of speech tagging 
         '''
@@ -103,7 +96,17 @@ def data_preprocessing(df:pd.DataFrame)->pd.DataFrame:
                 lemma = wordnet_lemmatizer.lemmatize(word, pos=pos)
                 lemma_rew = lemma_rew + " " + lemma
         return lemma_rew
+
+def data_preprocessing(df:pd.DataFrame)->pd.DataFrame:
+    '''
+    Function takes in the whole dataframe and carries out the following preprocessing steps:
     
+    1. General text cleaning
+    2. Part of Speech tagging
+    3. Lemmatization
+    
+    Then return the dataframe
+    '''    
     
     df['clean_text'] = df['Text'].apply(lambda x:clean_tweet(x))
     df['POS tagged'] = df['clean_text'].apply(token_stop_pos)
@@ -111,4 +114,6 @@ def data_preprocessing(df:pd.DataFrame)->pd.DataFrame:
     print('success!')
     
     return df
+
+
 
