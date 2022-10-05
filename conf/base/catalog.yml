@@ -61,6 +61,24 @@ text_comprehension.dummy_data:
 
 
 #sdg text data for tutorial example
+twitter_data:
+  type: pandas.CSVDataSet
+  filepath: data/01_raw/tweets.csv
+  layer: raw
+
+
+#The twitter text data after being cleaned (it has a new column called 'clean_text')
+cleaned_twitter_data:
+  type: pandas.CSVDataSet
+  filepath: data/02_intermediate/cleaned_twitter_data.csv
+  layer: intermediate
+
+#The twitter text data after being labelled (sentiment)
+labelled_twitter_data:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/labelled_twitter_data.csv
+  layer: primary
+  
 sdg_text_data:
   type: pandas.CSVDataSet
   filepath: data/01_raw/train.csv

@@ -21,12 +21,19 @@ def create_pipeline(**kwargs) -> Pipeline:
                 outputs="osdg_preprocessed_data",
                 name="osdg_preprocess_data_node",
             ),
+              node(
+                func=data_preprocessing,
+                inputs="twitter_data",
+                outputs="cleaned_twitter_data",
+                name="create_twitter_input_table_node",
+            ),
+
         ]
     )
     data_engineering = pipeline(
         pipe=pipeline_instance,
-        inputs= "sdg_data",
+        inputs=["sdg_data","twitter_data"],
         namespace = "data_engineering",
-        outputs = "osdg_preprocessed_data",
+        outputs = ["osdg_preprocessed_data", "cleaned_twitter_data"]
     )
     return data_engineering
