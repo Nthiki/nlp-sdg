@@ -26,7 +26,11 @@ sklearn
 scipy
 re
 nltk
-nltk.download('stopwords')
-nltk.download('wordnet')
-nltk.download('omw-1.4')
 vaderSentiment
+psycopg2
+nltk
+cached-path==1.1.2
+texthero
+allennlp
+allenlp-models
+

@@ -5,7 +5,7 @@ generated using Kedro 0.18.2
 
 from kedro.pipeline import Pipeline, node, pipeline
 
-from nlp_sdg.pipelines.text_comprehension.nodes import dummy_node
+from nlp_sdg.pipelines.text_comprehension.nodes import qes_and_ans
 
 
 
@@ -14,16 +14,17 @@ def create_pipeline(**kwargs) -> Pipeline:
         
         [
             node(
-                func=dummy_node,
-                inputs="model_input_data",
-                outputs="comprehension_output",
-                name="dummy_node",
+                func=qes_and_ans,
+                inputs="sdg_data",
+                outputs="q_and_a_data",
+                name="q_and_a_node",
             ),
         ]
     )
     text_comprehension = pipeline(
         pipe=pipeline_instance,
-        inputs="model_input_data",
-        namespace = "text_comprehension"
+        inputs="sdg_data",
+        namespace = "text_comprehension",
+        outputs = "q_and_a_data"
     )
     return text_comprehension
