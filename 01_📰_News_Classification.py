@@ -26,11 +26,11 @@ io = DataCatalog(
     }
 )
 
-#st.markdown("# UN SDG Internship Project🎈")
-st.sidebar.markdown("# This feature classifies new articles")
 
-#Title
+st.sidebar.write("This feature based on natural language processing (NLP) assigns labels to text predicated on Sustainable Development Goals (SDGs).")
 
+
+#load in classifier and vectorizer
 classifier = io.load("sdg_classifier")
 vectorizer = io.load("vectorizer")
 
@@ -75,18 +75,45 @@ def text_predict(my_text):
     doc = vectorizer.transform(doc)
     predicted = classifier.predict(doc)
     if predicted[0] == 1:
-        return "This is SDG label 1"
+        return "Goal 1: No Poverty"
+    elif predicted[0] == 2:
+        return "Goal 2: Zero Hunger"
+    elif predicted[0] == 3:
+        return "Goal 3: Good Health and Well-being"
+    elif predicted[0] == 4:
+        return "Goal 4: Quality Education"
+    elif predicted[0] == 5:
+        return "Goal 5: Gender Equality"
+    elif predicted[0] == 6:
+        return "Goal 6: Clean Water and Sanitation"
+    elif predicted[0] == 7:
+        return "Goal 7: Affordable and Clean Energy"
+    elif predicted[0] == 8:
+        return "Goal 8: Decent Work and Economic Growth"
+    elif predicted[0] == 9:
+        return "Goal 9: Industry, Innovationa and Infrastructure"
+    elif predicted[0] == 10:
+        return "Goal 10: Reduced Inequality"
+    elif predicted[0] == 11:
+        return "Goal 11: Sustainable Cities and Communities"
+    elif predicted[0] == 12:
+        return "Goal 12: Responsible Consumption and Production"
+    elif predicted[0] == 13:
+        return "Goal 13: Climate Action"
+    elif predicted[0] == 14:
+        return "Goal 14: Life Below Water"
     else:
-        return "This is not SDG label 1"
+        return "Goal 15: Life on Land"
 
 #main function
 
 def main():
-    st.title('UN SDG Internship Project')
-    st.markdown('## News article classification')
+    #st.title('UN SDG Internship Project')
+    st.markdown('## Text classification')
+    st.markdown('#### How do public artifacts reflect Shell\'s contribution towards Sustainable Development Goals?')
     
-    message1 = st.text_area("Please Enter News article", "Type Here")
-    if st.button("Detect SDG"):
+    message1 = st.text_area("Type in or paste any text segment (e.g. publication excerpt, news article) in the text box below", "Type Here")
+    if st.button("Get SDG Label"):
         with st.spinner('Running model...'):
             time.sleep(1)
         #clean_message = clean_text(message1)
@@ -122,7 +149,7 @@ if __name__ == '__main__':
 
 #st.dataframe(df)
 
-st.header('EDA')
+st.header('Data Analysis')
 st.subheader('Training data set')
 st.markdown('##### SDG label distribution')
 
