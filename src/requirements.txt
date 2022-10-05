@@ -32,5 +32,5 @@ nltk
 cached-path==1.1.2
 texthero
 allennlp
-allenlp-models
+allennlp-models
 
