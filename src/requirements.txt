@@ -24,7 +24,7 @@ joblib
 numexpr
 sklearn
 scipy
-re
+#re
 nltk
 vaderSentiment
 psycopg2
