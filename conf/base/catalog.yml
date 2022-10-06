@@ -107,7 +107,7 @@ classifier:
 
 #Team B
 q_and_a_data:
-type: pandas.CSVDataSet
-filepath: data/02_intermediate/q_and_a_data.csv
+  type: pandas.CSVDataSet
+  filepath: data/02_intermediate/q_and_a_data.csv
 
 
