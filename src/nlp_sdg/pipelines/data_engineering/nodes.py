@@ -16,14 +16,7 @@ nltk.download('wordnet')
 nltk.download('stopwords')
 nltk.download('omw-1.4')
 
-#twitter cleaning
-import re
-import nltk
-from nltk.stem import WordNetLemmatizer
-from nltk.corpus import stopwords
-nltk.download('stopwords')
-nltk.download('wordnet')
-nltk.download('omw-1.4')
+
 
 
 ''' ================================== 
