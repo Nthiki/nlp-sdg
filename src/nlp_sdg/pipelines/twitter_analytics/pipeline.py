@@ -12,12 +12,7 @@ def create_pipeline(**kwargs) -> Pipeline:
     pipeline_instance =  pipeline(
         
         [
-            node(
-                func=dummy_node,
-                inputs="model_input_data",
-                outputs="analytics_output",
-                name="dummy_node",
-            ),
+
             node(
                 func=label_tweet,
                 inputs="clean_tweet_data",

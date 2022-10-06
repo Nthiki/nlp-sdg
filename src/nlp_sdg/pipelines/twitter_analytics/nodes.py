@@ -41,7 +41,7 @@ def label_tweet(df: pd.DataFrame) -> pd.DataFrame:
     '''
     df['sentiment_score'] = df['Lemma'].apply(vadersentimentanalysis)
     df['sentiment'] = df['sentiment_score'].apply(vader_analysis)
-    df = df[['Text','sentiment']]
+    df = df[['clean_text','sentiment']]
     
     return df
 

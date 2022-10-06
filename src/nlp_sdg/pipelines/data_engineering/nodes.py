@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 from pyspark.sql import DataFrame
 import re
+import os
 
 # libraries for NLP
 #pip install nltk
@@ -29,17 +30,41 @@ from datetime import date,timedelta,datetime
 import snscrape.modules.twitter as sntwitter
 import time 
 
-def dummy_node(data: DataFrame) -> DataFrame:
-    """Dummy node to read data
 
-    Args:
-        data: Data containing features and target.
-    Returns:
-        data.
-    """
+def fetch_all_tweets():
+    ''' Fetch all tweets from 2017 september based on the keywords provided, it returns a dataframe'''
+    tweets_list2 = []
+    for i,tweet in enumerate(sntwitter.TwitterSearchScraper(f'(shell affordable energy) OR (shell clean energy) OR (shell affordable clean energy)  OR (shell decent work) OR (shell economic growth) OR (shell decent work economic growth) OR (shell industry innovation infrastructure) OR (shell innovation) OR (shell industry innovation) OR (shell responsible consumption) OR (shell responsible production) OR (shell climate action) OR (shell parternship) OR (shell partnership for goals)  lang:en since:2022-09-01 until:{date.today()}').get_items()):
+        tweets_list2.append([tweet.date, tweet.id, tweet.content, tweet.user.username,tweet.user.verified,tweet.user.location,tweet.replyCount,tweet.retweetCount,tweet.likeCount,tweet.quoteCount])
+        df = pd.DataFrame(tweets_list2, columns=['Datetime', 'Tweet_Id', 'Text', 'Username','Verified','Location','Reply_Count','Retweet_Count','Like_Count','Quote_Count'])
+    return df
 
+def fetch_sectioned_tweets(df):
+    '''Fetch tweets added since the time the last data was fetched it returns a dataframe'''
+    # read the already existing csv file
+    # Check maximum date
+    d = datetime.strptime(df['Datetime'].agg('max')[0:-6], "%Y-%m-%d %H:%M:%S")
+    max_date = int(time.mktime(d.timetuple())+1)
+    now_time = int((datetime.now()+timedelta(days=1)).timestamp())
+    sectioned_tweet_list = []
+    for i,tweet in enumerate(sntwitter.TwitterSearchScraper(f'(shell affordable energy) OR (shell clean energy) OR (shell affordable clean energy)  OR (shell decent work) OR (shell economic growth) OR (shell decent work economic growth) OR (shell industry innovation infrastructure) OR (shell innovation) OR (shell industry innovation) OR (shell responsible consumption) OR (shell responsible production) OR (shell climate action) OR (shell parternship) OR (shell partnership for goals) lang:en  since_time:{max_date} until_time:{now_time}').get_items()):
+        sectioned_tweet_list.append([tweet.date, tweet.id, tweet.content, tweet.user.username,tweet.user.verified,tweet.user.location,tweet.replyCount,tweet.retweetCount,tweet.likeCount,tweet.quoteCount])
+        df = pd.DataFrame(sectioned_tweet_list, columns=['Datetime', 'Tweet_Id', 'Text', 'Username','Verified','Location','Reply_Count','Retweet_Count','Like_Count','Quote_Count'])
+    return df
 
-    return data
+def generate_hashtag_column(tweet):
+         '''
+        tweet: String
+               Input Data
+        hashtag: String
+               Output Data
+        func: Generates hashtag column from tweet
+         '''
+        #  hashtag = tweet.apply(lambda x: " ".join ([w for w in x.split() if '#'  in w[0:3] ]))
+         hashtag = " ".join ([w for w in tweet.split() if '#'  in w[0:3] ])
+         hashtag =tweet.replace("[^a-zA-Z0–9]", ' ')
+         return hashtag
+
 
 def clean_tweet(tweet):
         '''
@@ -97,6 +122,39 @@ def lemmatize(pos_data):
                 lemma_rew = lemma_rew + " " + lemma
         return lemma_rew
 
+
+
+def fetch_save_tweets():
+    # Putting together everything
+    file_exists = os.path.exists("/home/kedro/data/01_raw/tweets_2.csv")
+    if (file_exists == True):
+        print("File exist, fetching extra records")
+        df1 = pd.read_csv('/home/kedro/data/01_raw/tweets_2.csv')
+        df1=df1.loc[:,~df1.columns.str.contains('Unnamed')]
+        fetched_data =  fetch_sectioned_tweets(df1)
+        # fetched_data['clean_text'] = fetched_data['Text'].apply(lambda x:clean_tweet(x))
+        # fetched_data['hashtags'] = fetched_data['Text'].apply(lambda x:generate_hashtag_column(x))
+        # fetched_data = fetched_data.loc[:,['Datetime', 'Tweet_Id','Username','Verified','Location','Reply_Count','Retweet_Count','Like_Count','Quote_Count','clean_text','hashtags']]
+        # df = pd.concat([fetched_data,df1])
+        # bul = df.duplicated(subset='Tweet_Id', keep='first' )
+        # df=df[~bul]
+        df=fetched_data
+        # print("Done fetching and appending extra records!!")
+        print(df.columns)
+
+    else:
+        print("File does not exist, fetching all records")
+        df = fetch_all_tweets()
+        print("Done fetching records...")
+        print("All processes are done!!")
+    df['clean_text'] = df['Text'].apply(lambda x:clean_tweet(x))
+    df['hashtags'] = df['Text'].apply(lambda x:generate_hashtag_column(x))
+    df = df.loc[:,['Datetime', 'Tweet_Id','Username','Verified','Location','Reply_Count','Retweet_Count','Like_Count','Quote_Count','clean_text','hashtags']]
+
+    return df
+
+
+
 def data_preprocessing(df:pd.DataFrame)->pd.DataFrame:
     '''
     Function takes in the whole dataframe and carries out the following preprocessing steps:
@@ -108,12 +166,11 @@ def data_preprocessing(df:pd.DataFrame)->pd.DataFrame:
     Then return the dataframe
     '''    
     
-    df['clean_text'] = df['Text'].apply(lambda x:clean_tweet(x))
+    # df['clean_text'] = df['Text'].apply(lambda x:clean_tweet(x))
     df['POS tagged'] = df['clean_text'].apply(token_stop_pos)
     df['Lemma'] = df['POS tagged'].apply(lemmatize)
     print('success!')
     
     return df
-
 
 

@@ -5,7 +5,7 @@ generated using Kedro 0.18.2
 
 from kedro.pipeline import Pipeline, node, pipeline
 
-from nlp_sdg.pipelines.data_engineering.nodes import dummy_node, data_preprocessing
+from nlp_sdg.pipelines.data_engineering.nodes import dummy_node, data_preprocessing,fetch_save_tweets
 
 
 
@@ -13,15 +13,23 @@ def create_pipeline(**kwargs) -> Pipeline:
     pipeline_instance =  pipeline(
         
         [
+            # node(
+            #     func=dummy_node,
+            #     inputs="create_table_query",
+            #     outputs= None,
+            #     name= "create_table_node",
+            # ),
             node(
-                func= dummy_node,
-                inputs="sdg_data",
-                outputs="model_input_data",
-                name="dummy_node",
+                func=fetch_save_tweets,
+                inputs=None,
+                outputs= 'save_data_to_rds',
+                name= "fetch_save_tweets_node",
             ),
+          
             node(
                 func= data_preprocessing,
-                inputs='tweet_text_data',
+                # inputs='tweet_text_data',
+                inputs='raw_data',
                 outputs='clean_tweet_data',
                 name='data_preprocessing_node'
             )
@@ -29,8 +37,8 @@ def create_pipeline(**kwargs) -> Pipeline:
     )
     data_engineering = pipeline(
         pipe= pipeline_instance,
-        inputs=["sdg_data", "tweet_text_data"],
-        namespace = "data_engineering",
-        outputs = ["model_input_data","clean_tweet_data"]
+        outputs = ["save_data_to_rds","clean_tweet_data"],
+        inputs="raw_data",
+        namespace = "data_engineering"        
     )
     return data_engineering
