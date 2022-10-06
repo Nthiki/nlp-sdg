@@ -9,11 +9,6 @@ ENV JAVA_HOME "/usr/lib/jvm/default-java"
 COPY src/requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt && rm -f /tmp/requirements.txt
 
-# download spacy modules
-RUN python -m spacy download en_core_web_lg \
-python -m spacy download en_core_web_sm \
-python -m spacy download en
-
 # add kedro user
 ARG KEDRO_UID=999
 ARG KEDRO_GID=0
@@ -28,5 +23,11 @@ USER kedro
 RUN chmod -R a+w /home/kedro
 
 EXPOSE 8888
+
+# download spacy modules
+RUN python -m spacy download en_core_web_lg; \
+python -m spacy download en_core_web_sm; \
+python -m spacy download en
+
 
 CMD ["kedro", "run"]
