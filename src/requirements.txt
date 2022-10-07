@@ -33,4 +33,6 @@ cached-path==1.1.2
 texthero
 allennlp
 allennlp-models
+snscrape
+
 

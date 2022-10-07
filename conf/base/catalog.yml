@@ -149,3 +149,23 @@ save_data_to_rds:
   save_args:
     schema: public
     if_exists: append
+
+# saving the text classification model
+
+
+text_classification.sdg_classifier:
+  type: pickle.PickleDataSet
+  filepath: data/06_models/sdg_classifier.pickle
+  versioned: true
+  layer: models
+
+text_classification.vectorizer:
+  type: pickle.PickleDataSet
+  filepath: data/06_models/vectorizer.pickle
+  versioned: true
+  layer: models
+
+#text_classification.sdg_classifier:
+#  type: pickle.PickleDataSet
+#  filepath: <path to save in local/s3>/your_model.hd5
+
