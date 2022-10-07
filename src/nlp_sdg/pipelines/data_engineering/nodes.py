@@ -218,7 +218,7 @@ def fetch_sectioned_tweets(df):
         df = pd.DataFrame(sectioned_tweet_list, columns=['Datetime', 'Tweet_Id', 'Text', 'Username','Verified','Location','Reply_Count','Retweet_Count','Like_Count','Quote_Count'])
     return df
 
-def generate_hashtag_column(tweet):
+def _generate_hashtag_column(tweet):
          '''
         tweet: String
                Input Data
@@ -259,7 +259,7 @@ def _clean_tweet(tweet):
     
     return tweet
 
-def token_stop_pos(text):
+def _token_stop_pos(text):
         '''
         Maps the part of speech to words in sentences giving consideration to words that are nouns, verbs, 
         adjectives and adverbs
@@ -303,8 +303,8 @@ def fetch_save_tweets():
         df = fetch_all_tweets()
         print("Done fetching records...")
         print("All processes are done!!")
-    df['clean_text'] = df['Text'].apply(lambda x:clean_tweet(x))
-    df['hashtags'] = df['Text'].apply(lambda x:generate_hashtag_column(x))
+    df['clean_text'] = df['Text'].apply(lambda x:_clean_tweet(x))
+    df['hashtags'] = df['Text'].apply(lambda x:_generate_hashtag_column(x))
     df = df.loc[:,['Datetime', 'Tweet_Id','Username','Verified','Location','Reply_Count','Retweet_Count','Like_Count','Quote_Count','clean_text','hashtags']]
 
     return df
@@ -336,8 +336,8 @@ def preprocess_tweets(df:pd.DataFrame)->pd.DataFrame:
     '''    
     
     # df['clean_text'] = df['Text'].apply(lambda x:clean_tweet(x))
-    df['POS tagged'] = df['clean_text'].apply(token_stop_pos)
-    df['Lemma'] = df['POS tagged'].apply(lemmatize)
+    df['POS tagged'] = df['clean_text'].apply(_token_stop_pos)
+    df['Lemma'] = df['POS tagged'].apply(_lemmatize)
     print('success!')
     
     return df
