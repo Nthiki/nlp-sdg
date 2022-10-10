@@ -28,3 +28,4 @@ def create_pipeline(**kwargs) -> Pipeline:
         namespace = "twitter_analytics"
     )
     return twitter_analytics
+
