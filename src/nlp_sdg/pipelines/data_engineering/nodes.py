@@ -335,9 +335,9 @@ def preprocess_tweets(df:pd.DataFrame)->pd.DataFrame:
     Then return the dataframe
     '''    
     
-    # df['clean_text'] = df['Text'].apply(lambda x:clean_tweet(x))
-    df['POS tagged'] = df['clean_text'].apply(_token_stop_pos)
-    df['Lemma'] = df['POS tagged'].apply(_lemmatize)
+    df['clean_text'] = df['clean_text'].apply(lambda x:_clean_article(x))
+    #df['POS tagged'] = df['clean_text'].apply(_token_stop_pos)
+    #df['Lemma'] = df['POS tagged'].apply(_lemmatize)
     print('success!')
     
     return df
