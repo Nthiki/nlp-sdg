@@ -61,5 +61,5 @@ def _vader_sentiment_analysis(tweet):
 def label_tweet(data:pd.DataFrame) -> pd.DataFrame:
 
     data['sentiment'] = data['clean_text'].apply(_vader_sentiment_analysis)
-    data = data[['Text','sentiment']]
+    data = data[['clean_text','sentiment']]
     return data
