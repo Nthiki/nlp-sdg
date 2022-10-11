@@ -19,24 +19,14 @@ sdg_data:
     inferSchema: True
   save_args:
     sep: '\t'
+model_input_data:
+  type: MemoryDataSet
 
 text_comprehension.dummy_data:
   type: MemoryDataSet
 
 text_classification.dummy_data:
   type: MemoryDataSet
-
-tweet_text_data:
-  type: pandas.CSVDataSet
-  filepath: data/01_raw/tweets_2.csv
-  layer: raw
-  #load_args:
-    #sep: '/t'
-
-# raw_tweet_text_data:
-#   type: pandas.CSVDataSet
-#   filepath: data/01_raw/tweets_2.csv
-#   layer: raw
 
 clean_tweet_data:
   type: pandas.CSVDataSet
@@ -47,11 +37,6 @@ clean_label_data:
   type: pandas.CSVDataSet
   filepath: data/02_intermediate/clean_label_data.csv
   layer: intermediate
-
-raw_data:
-  type: pandas.SQLQueryDataSet
-  credentials: rds_connection_credentials
-  sql: SELECT * FROM twitter_stream 
 
 rds_connection:
   type: pandas.SQLTableDataSet
@@ -68,17 +53,14 @@ save_data_to_rds:
     schema: public
     if_exists: append
 
+clean_data:
+  type: pandas.SQLQueryDataSet
+  credentials: rds_connection_credentials
+  sql: SELECT * FROM twitter_stream 
 
+max_date:
+  type: pandas.SQLQueryDataSet
+  credentials: rds_connection_credentials
+  sql: SELECT "Datetime" FROM public.twitter_stream order by "Datetime" desc limit 1;
 
-# dummy_data:
-#   type: spark.SparkDataSet
-  # filepath: data/01_raw/osdg-dummy_data.csv
-  # file_format: csv
-  # #credentials: dev_s3
-  # load_args:
-  #   header: True
-  #   inferSchema: True
-  # save_args:
-  #   sep: '\t'
-  #   overwrite: True
 
