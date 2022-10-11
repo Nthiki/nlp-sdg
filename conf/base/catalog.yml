@@ -101,16 +101,39 @@ twitter_data:
 
 
 #The twitter text data after being cleaned (it has a new column called 'clean_text')
-cleaned_twitter_data:
+
+clean_tweet_data:
   type: pandas.CSVDataSet
-  filepath: data/02_intermediate/cleaned_twitter_data.csv
-  layer: intermediate
+  #filepath: data/02_intermediate/clean_tweet_data.csv
+  #layer: intermediate
+  filepath: s3://internship-sdg-2022/kedro/data/02_intermediate/clean_tweet_data.csv
+  credentials: s3_credentials
+  #file_format: csv
+  load_args:
+    sep: ','
+  save_args:
+    index: False
+    sep: ','
+    header: True
+    encoding: "utf-8"
+
+
 
 #The twitter text data after being labelled (sentiment)
 labelled_twitter_data:
   type: pandas.CSVDataSet
-  filepath: data/03_primary/labelled_twitter_data.csv
-  layer: primary
+  #filepath: data/03_primary/labelled_twitter_data.csv
+  #layer: primary
+  filepath: s3://internship-sdg-2022/kedro/data/03_primary/labelled_twitter_data.csv
+  credentials: s3_credentials
+  #file_format: csv
+  load_args:
+    sep: ','
+  save_args:
+    index: False
+    sep: ','
+    header: True
+    encoding: "utf-8"
   
 #processed SDG text data ready for ML model training
 #osdg_preprocessed_data:
@@ -139,15 +162,23 @@ tweet_text_data:
 #   filepath: data/01_raw/tweets_2.csv
 #   layer: raw
 
-clean_tweet_data:
-  type: pandas.CSVDataSet
-  filepath: data/02_intermediate/clean_tweet_data.csv
-  layer: intermediate
 
 clean_label_data:
   type: pandas.CSVDataSet
-  filepath: data/02_intermediate/clean_label_data.csv
-  layer: intermediate
+  #filepath: data/02_intermediate/clean_label_data.csv
+  #layer: intermediate
+  filepath: s3://internship-sdg-2022/kedro/data/02_intermediate/clean_tweet_data.csv
+  credentials: s3_credentials
+  #file_format: csv
+  load_args:
+    sep: ','
+  save_args:
+    index: False
+    sep: ','
+    header: True
+    encoding: "utf-8"
+
+  
 
 raw_data:
   type: pandas.SQLQueryDataSet
