@@ -189,13 +189,13 @@ save_data_to_rds:
 
 text_classification.vectorizer:
   type: pickle.PickleDataSet
-  filepath: s3://internship-sdg-2022/models/vectorizer.pickle
+  filepath: s3://internship-sdg-2022/kedro/data/06_models/vectorizer.pickle
   credentials: s3_credentials
   backend: pickle
 
 text_classification.sdg_classifier:
   type: pickle.PickleDataSet
-  filepath: s3://internship-sdg-2022/models/sdg_classifier.pickle
+  filepath: s3://internship-sdg-2022/kedro/data/06_models/sdg_classifier.pickle
   credentials: s3_credentials
   backend: pickle
 
