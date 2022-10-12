@@ -35,4 +35,6 @@ allennlp
 allennlp-models
 snscrape
 streamlit
+transformers
+torch
 
