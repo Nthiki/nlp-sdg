@@ -18,6 +18,11 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.calibration import CalibratedClassifierCV
 
+#saving the model
+import tempfile
+import boto3
+import joblib
+
 
 ''' ================================== 
 
@@ -125,7 +130,7 @@ def evaluate_model(sdg_classifier, X_test_vec: np.ndarray, y_test: np.ndarray):
     logger.info("Model has an f1 score (weighted) of %.3f on test data.", score)
     #logger.info(classification_report(y_test, y_pred)) 
 
-    
+
 ''' ================================== 
 
      ML predictions of new data
@@ -184,6 +189,7 @@ def get_predictions(sdg_classifier, X_news_vec: np.ndarray) -> List:
     y_pred = sdg_classifier.predict(X_test_vec)
 
     return [y_pred]
+
 
 
 
