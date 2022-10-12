@@ -25,9 +25,6 @@ import time
 
 
 
-''' ================================== 
- Dummy code
- ==================================== '''
 
 
 def _clean_agreement(data: pd.DataFrame) -> pd.DataFrame:
@@ -188,8 +185,32 @@ def osdg_preprocessed_data(data: pd.DataFrame) -> pd.DataFrame:
 ''' ================================== 
  Data engineering functions for Team A
  ==================================== '''
+'''
+TK: As it stands, I don't see the need for this code, we can simply read from the data nodes itself and start using the data.
+'''
+def convert_to_csv(data : DataFrame) -> DataFrame:
+    connection = sqlite3.connect(data)
+    cursor = connection.cursor()
 
+    # Execute the query
+    cursor.execute('select * from mydata')
+    # Get Header Names (without tuples)
+    colnames = [desc[0] for desc in cursor.description]
+    # Get data in batches
+    while True:
+        # Read the data
+        df = pd.DataFrame(cursor.fetchall())
+        # We are done if there are no data
+        if len(df) == 0:
+            break
+        # Let us write to the file
+        else:
+            df.to_csv(f, header=colnames)
 
+    cursor.close()
+    connection.close()
+
+    return df
 
 
 
