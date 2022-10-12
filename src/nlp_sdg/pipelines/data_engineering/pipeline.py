@@ -28,12 +28,12 @@ def create_pipeline(**kwargs) -> Pipeline:
             #     name="create_twitter_input_table_node",
             # ),
 
-            node(
-                func=fetch_save_tweets,
-                inputs=None,
-                outputs= 'save_data_to_rds',
-                name= "fetch_save_tweets_node",
-            ),
+            # node(
+            #     func=fetch_save_tweets,
+            #     inputs=None,
+            #     outputs= 'save_data_to_rds',
+            #     name= "fetch_save_tweets_node",
+            # ),
 
             node(
                 func= preprocess_tweets,
