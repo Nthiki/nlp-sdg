@@ -59,7 +59,7 @@ q_and_a_data:
 
 articles:
   type: pandas.SQLTableDataSet
-  credentials: rds_connection
+  credentials: rds_connection_credentials
   table_name: shell_webscraped_articles
   save_args:
     if_exists: replace
