@@ -17,21 +17,6 @@ from kedro.extras.datasets.pandas import (
     ParquetDataSet,
 )
 
-# NB !!!
-#everytime we run kedro pipelines, a new ML model gets saved with unique pickle ID. This means
-# that each time we have to update the DataCatalog  (just copy filepath). Ideally, the ML model is stored in
-# an S3 bucket and called in streamlit each time.
-# ¡¡¡¡¡¡¡
-#io = DataCatalog(
-#    {
-#        "osdg_preprocessed_data": CSVDataSet(filepath="data/03_primary/osdg_preprocessed_data.csv", load_args=dict(sep=',')),
-#        "sdg_text_data": CSVDataSet(filepath="data/01_raw/train.csv", load_args=dict(sep="\t")),
-#        "sdg_classifier": PickleDataSet(filepath="data/06_models/sdg_classifier.pickle/2022-10-03T10.53.28.385Z/sdg_classifier.pickle", backend="pickle"),
-#        "vectorizer": PickleDataSet(filepath="data/06_models/vectorizer.pickle/2022-10-03T14.27.01.572Z/vectorizer.pickle", backend="pickle")
-#    }
-#)
-
-
 config = {
     "osdg_preprocessed_data": {
         "type": "pandas.CSVDataSet",
@@ -58,8 +43,8 @@ config = {
 #keep this somewhere safer
 credentials = {
     "s3_credentials": {
-            "key": "AKIA5XNJCCEVDTPAHASV",
-            "secret": "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"
+            "key": "<key>",
+            "secret": "<secret>"
      }
 }
 
