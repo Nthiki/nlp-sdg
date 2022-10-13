@@ -25,9 +25,9 @@ RUN chmod -R a+w /home/kedro
 EXPOSE 8888
 
 # download spacy modules
-RUN python -m spacy download en_core_web_lg; \
-python -m spacy download en_core_web_sm; \
-python -m spacy download en
+RUN python -m spacy download en_core_web_sm
+# python -m spacy download en_core_web_lg; \
+# python -m spacy download en
 
 
 CMD ["kedro", "run"]
