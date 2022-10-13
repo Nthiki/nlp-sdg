@@ -2,12 +2,13 @@
 This is a boilerplate pipeline 'data_engineering'
 generated using Kedro 0.18.2
 """
-from typing import Dict
-import numpy as np
+#from typing import Dict
+#import numpy as np
+from sqlite3 import Timestamp
 import pandas as pd
 import re
-import os
-from pyspark.sql import DataFrame
+#import os
+#from pyspark.sql import DataFrame
 import texthero as hero
 import nltk
 nltk.download('wordnet')
@@ -17,15 +18,16 @@ nltk.download('averaged_perceptron_tagger')
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords, wordnet
 from nltk.stem import WordNetLemmatizer
-from nltk import SnowballStemmer, PorterStemmer, LancasterStemmer
+#from nltk import SnowballStemmer, PorterStemmer, LancasterStemmer
 from datetime import date,timedelta,datetime
 import snscrape.modules.twitter as sntwitter
 import time 
 
 
 
-
-
+''' ================================== 
+ Data engineering functions for Team C
+ ==================================== '''
 
 def _clean_agreement(data: pd.DataFrame) -> pd.DataFrame:
     '''
@@ -174,29 +176,29 @@ def osdg_preprocessed_data(data: pd.DataFrame) -> pd.DataFrame:
 '''
 TK: As it stands, I don't see the need for this code, we can simply read from the data nodes itself and start using the data.
 '''
-def convert_to_csv(data : DataFrame) -> DataFrame:
-    connection = sqlite3.connect(data)
-    cursor = connection.cursor()
+# def convert_to_csv(data : DataFrame) -> DataFrame:
+#     connection = sqlite3.connect(data)
+#     cursor = connection.cursor()
 
-    # Execute the query
-    cursor.execute('select * from mydata')
-    # Get Header Names (without tuples)
-    colnames = [desc[0] for desc in cursor.description]
-    # Get data in batches
-    while True:
-        # Read the data
-        df = pd.DataFrame(cursor.fetchall())
-        # We are done if there are no data
-        if len(df) == 0:
-            break
-        # Let us write to the file
-        else:
-            df.to_csv(f, header=colnames)
+#     # Execute the query
+#     cursor.execute('select * from mydata')
+#     # Get Header Names (without tuples)
+#     colnames = [desc[0] for desc in cursor.description]
+#     # Get data in batches
+#     while True:
+#         # Read the data
+#         df = pd.DataFrame(cursor.fetchall())
+#         # We are done if there are no data
+#         if len(df) == 0:
+#             break
+#         # Let us write to the file
+#         else:
+#             df.to_csv(f, header=colnames)
 
-    cursor.close()
-    connection.close()
+#     cursor.close()
+#     connection.close()
 
-    return df
+#     return df
 
 
 
@@ -215,9 +217,10 @@ def fetch_all_tweets():
 
    
 
-def fetch_sectioned_tweets(max_date):
+def fetch_sectioned_tweets(max_date:Timestamp) -> pd.DataFrame:
     '''Fetch tweets added since the time the last data was fetched it returns a dataframe'''
-    d = datetime.strptime(max_date['Datetime'].to_string(index=False)[0:-6], "%Y-%m-%d %H:%M:%S")
+    #d = datetime.strptime(max_date['Datetime'].to_string(index=False)[0:-6], "%Y-%m-%d %H:%M:%S")
+    d = max_date.strftime("%Y-%m-%d %H:%M:%S")
     maximum_date = int(time.mktime(d.timetuple())+1)
     now_time = int((datetime.now()+timedelta(days=1)).timestamp())
     sectioned_tweet_list = []
@@ -277,7 +280,7 @@ def _lemmatize_tweets(text: str) -> str:
 
 
 
-def preprocess_tweets(max_date)->pd.DataFrame:
+def preprocess_tweets(data: pd.DataFrame)->pd.DataFrame:
     '''
     Function takes in the whole dataframe and carries out the following preprocessing steps:
 
@@ -286,7 +289,8 @@ def preprocess_tweets(max_date)->pd.DataFrame:
     3. Lemmatization
 
     Then return the dataframe
-    '''        
+    ''' 
+    max_date = data.Datetime.max() 
     if max_date is not None:
         print(f"Fetching extra records as from {max_date}")
         fetched_data =  fetch_sectioned_tweets(max_date)
@@ -296,6 +300,7 @@ def preprocess_tweets(max_date)->pd.DataFrame:
         print("Fetching all records")
         df = fetch_all_tweets()
         print("Done fetching records...") 
+        
     df['clean_text'] = df['Text'].apply(lambda x:_clean_tweet(x))
     df['POS tagged'] = df['clean_text'].apply(_token_stop_pos)
     df['Lemma'] = df['POS tagged'].apply(_lemmatize_tweets)
@@ -308,6 +313,4 @@ def preprocess_tweets(max_date)->pd.DataFrame:
 
 
 
-''' ================================== 
- Data engineering functions for Team C
- ==================================== '''
+
