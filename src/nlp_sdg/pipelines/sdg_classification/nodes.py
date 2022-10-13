@@ -145,7 +145,7 @@ def evaluate_model(sdg_classifier, X_test_vec: np.ndarray, y_test: np.ndarray):
 # new article data should be in pandas format with text col
 # we should output a col with top 3 labels and their probabilites
 
-def vectorize_new_text(training_data: pd.DataFrame, new_data: pd.DataFrame, parameters: Dict) -> List:
+def vectorize_new_text(new_data: pd.DataFrame, vectorizer) -> List:
     '''
     Vectorize text column in new data coming from articles.
     
@@ -158,26 +158,16 @@ def vectorize_new_text(training_data: pd.DataFrame, new_data: pd.DataFrame, para
         A list containing vectorized news article data. 
         
     '''
-
-    #Original data
-    X = training_data['text'].values
-    y = training_data['sdg'].values
     #Data coming from the news articles
-    X_news = new_data['text'].values
+    X_news = new_data['text'].apply(lambda x: np.str_(x))
 
-    #Tfid
-    vectorizer = TfidfVectorizer(ngram_range=(parameters['ngram_range_min'],
-                                              parameters['ngram_range_max']),
-                                 max_features=parameters['max_features'])
-    #Fit to ALL original train data and transform new data
-    X = vectorizer.fit_transform(X)
-    X_news = vectorizer.transform(X_news)
+    X_news_vec = vectorizer.transform(X_news)
 
 
-    return [X_news] #output should be X_news_vec
+    return X_news_vec #output should be X_news_vec
 
 
-def get_predictions(sdg_classifier, X_news_vec: np.ndarray) -> List:
+def get_predictions(new_data, sdg_classifier, X_news_vec: np.ndarray) -> List:
     '''
     Generate top 3 SDG predictions for incoming news articles
     
@@ -186,9 +176,13 @@ def get_predictions(sdg_classifier, X_news_vec: np.ndarray) -> List:
         classifier: Trained model.
         
     '''
-    y_pred = sdg_classifier.predict(X_test_vec)
+    y_pred = sdg_classifier.predict(X_news_vec)
+    new_data['predictions'] = y_pred
+    print(new_data.head(2))
+    #df_predictions = pd.DataFrame(y_pred, columns = ['Predictions'])
 
-    return [y_pred]
+
+    return new_data
 
 
 
