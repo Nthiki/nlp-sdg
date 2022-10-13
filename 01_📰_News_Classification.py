@@ -3,6 +3,11 @@ import plotly.express as px
 import numpy as np 
 import pandas as pd
 import time
+import matplotlib.pyplot as plt
+import seaborn as sns
+import altair as alt
+
+
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 from kedro.io import DataCatalog
@@ -129,7 +134,7 @@ catalog = DataCatalog.from_config(config, credentials)
 
 
 #cache function that loads in data
-@st.cache
+@st.cache(allow_output_mutation = True)
 def load_data(data_name):
     data = catalog.load(data_name)
     #can add extra stuff here
@@ -246,6 +251,12 @@ if __name__ == '__main__':
 
 #st.dataframe(df)
 
+sdgLabels = {1: "No poverty", 2: "Zero Hunger", 3: "Good Health and well-being", 4: "Quality Education",
+             5: "Gender equality", 6: "Clean water and sanitation", 7: "Affordable and clean energy",
+             9: "Industry, Innovation and Infrastructure", 8: "Decent work and economic growth",
+             10: "Reduced Inequality", 13: "Climate Action", 11: "Sustainable cites and communities",
+             12: "Responsible consumption and production", 14: "Life below water", 15: "Life on land"}
+
 
 data_load_state = st.text('Loading data from AWS S3...')
 predictions_df = load_data("predictions")
@@ -257,5 +268,20 @@ st.subheader('Training data set')
 st.markdown('##### SDG label distribution')
 
 hist_values = np.histogram(data['sdg'], bins=15, range=(0,16))[0]
+top_predictions = pd.DataFrame(predictions_df['predictions'].value_counts())
+top_predictions = top_predictions.rename_axis('SDG').reset_index()
+top_predictions["Description"] = top_predictions["SDG"].map(sdgLabels)
+#top_predictions['SDG'] = top_predictions.index
 
-st.bar_chart(hist_values)
+#top_predictions['SDG'] = top_predictions.index.to_series()
+st.dataframe(top_predictions)
+
+
+#histogram
+
+
+c = alt.Chart(top_predictions).mark_bar().encode(
+        alt.X("predictions", title='Number of predictions'), alt.Y('Description',title='Description of SDG'))
+
+
+st.altair_chart(c, use_container_width=True)
