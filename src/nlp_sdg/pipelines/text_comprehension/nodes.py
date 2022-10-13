@@ -6,10 +6,6 @@ generated using Kedro 0.18.2
 import pandas as pd
 from pyspark.sql import DataFrame
 from allennlp.predictors.predictor import Predictor
-
-
-import pandas as pd
-import torch
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
 model = AutoModelForSeq2SeqLM.from_pretrained('t5-base')
