@@ -17,44 +17,52 @@ from kedro.extras.datasets.pandas import (
     ParquetDataSet,
 )
 
-# NB !!!
-#everytime we run kedro pipelines, a new ML model gets saved with unique pickle ID. This means
-# that each time we have to update the DataCatalog  (just copy filepath). Ideally, the ML model is stored in
-# an S3 bucket and called in streamlit each time.
-# ¡¡¡¡¡¡¡
-io = DataCatalog(
-    {
-        "sdg_text_data": CSVDataSet(filepath="data/01_raw/train.csv", load_args=dict(sep="\t")),
-        "osdg_preprocessed_data": CSVDataSet(filepath="data/03_primary/osdg_preprocessed_data.csv", load_args=dict(sep=',')),
-        "sdg_classifier": PickleDataSet(filepath="data/06_models/sdg_classifier.pickle/2022-10-03T10.53.28.385Z/sdg_classifier.pickle", backend="pickle"),
-        "vectorizer": PickleDataSet(filepath="data/06_models/vectorizer.pickle/2022-10-03T14.27.01.572Z/vectorizer.pickle", backend="pickle")
-    }
-)
+config = {
+    "osdg_preprocessed_data": {
+        "type": "pandas.CSVDataSet",
+        "filepath": "s3://internship-sdg-2022/kedro/data/02_intermediate/osdg_preprocessed_data.csv",
+        "credentials": "s3_credentials",
+        "load_args": {
+            "sep": ','
+        }
+    },
+    "sdg_classifier": {
+        "type": "pickle.PickleDataSet",
+        "filepath": "s3://internship-sdg-2022/kedro/data/06_models/sdg_classifier.pickle",
+        "credentials": "s3_credentials",
+        "backend": "pickle"
+    },
+    "vectorizer": {
+        "type": "pickle.PickleDataSet",
+        "filepath": "s3://internship-sdg-2022/kedro/data/06_models/vectorizer.pickle",
+        "credentials": "s3_credentials",
+        "backend": "pickle"
+    }, 
+}
 
+#keep this somewhere safer
+credentials = {
+    "s3_credentials": {
+            "key": "<key>",
+            "secret": "<secret>"
+     }
+}
+
+catalog = DataCatalog.from_config(config, credentials)
+
+data_load_state = st.text('Loading data from AWS S3...')
+data = catalog.load("osdg_preprocessed_data")
+#catalog.save("boats", df)
+data_load_state.text("")
+#st.dataframe(data)
+
+classifier = catalog.load("sdg_classifier")
+vectorizer = catalog.load("vectorizer")
 
 st.sidebar.write("This feature based on natural language processing (NLP) assigns labels to text predicated on Sustainable Development Goals (SDGs).")
 
 
-#load in classifier and vectorizer
-classifier = io.load("sdg_classifier")
-vectorizer = io.load("vectorizer")
 
-#load in data
-
-@st.experimental_memo
-#@st.cache
-def load_data(data_name):
-    data = io.load(data_name)
-    #can add extra stuff here
-    return data
-
-
-# Create a text element and let the reader know the data is loading.
-data_load_state = st.text('Loading data...')
-# Load rows of data into the dataframe.
-data = load_data("osdg_preprocessed_data")
-# Notify the reader that the data was successfully loaded.
-data_load_state.text("")
 
 #helper functions
 
