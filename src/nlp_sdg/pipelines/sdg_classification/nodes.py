@@ -84,7 +84,7 @@ def vectorize_text(X_train: np.ndarray, X_test: np.ndarray, parameters: Dict) ->
     X_test = vectorizer.transform(X_test)
 
 
-    return [X_train, X_test]
+    return [X_train, X_test, vectorizer]
 
 
 def train_model(X_train_vec: np.ndarray, y_train: np.ndarray, parameters: Dict) -> LinearSVC:

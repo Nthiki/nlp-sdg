@@ -22,7 +22,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 func=vectorize_text,
                 inputs=["X_train", "X_test","parameters"],
-                outputs=['X_train_vec', 'X_test_vec'],
+                outputs=['X_train_vec', 'X_test_vec', "vectorizer"],
                 name="vectorize_text_node",
             ),
             node(

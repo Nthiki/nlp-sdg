@@ -58,8 +58,8 @@ config = {
 #keep this somewhere safer
 credentials = {
     "s3_credentials": {
-            "key": "<insert key>",
-            "secret": "<insert secret>"
+            "key": "AKIA5XNJCCEVDTPAHASV",
+            "secret": "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"
      }
 }
 
@@ -69,14 +69,10 @@ data_load_state = st.text('Loading data from AWS S3...')
 data = catalog.load("osdg_preprocessed_data")
 #catalog.save("boats", df)
 data_load_state.text("")
-st.dataframe(data)
+#st.dataframe(data)
 
 classifier = catalog.load("sdg_classifier")
-st.write(classifier)
-
-#vectorizer = catalog.load("vectorizer")
-#st.write(vectorizer)
-
+vectorizer = catalog.load("vectorizer")
 
 st.sidebar.write("This feature based on natural language processing (NLP) assigns labels to text predicated on Sustainable Development Goals (SDGs).")
 
