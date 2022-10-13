@@ -6,9 +6,7 @@ generated using Kedro 0.18.2
 from kedro.pipeline import Pipeline, node, pipeline
 
 
-from nlp_sdg.pipelines.data_engineering.nodes import osdg_preprocessed_data, preprocess_tweets ,fetch_save_tweets 
-
-
+from nlp_sdg.pipelines.data_engineering.nodes import osdg_preprocessed_data, preprocess_tweets
 
 
 def create_pipeline(**kwargs) -> Pipeline:
