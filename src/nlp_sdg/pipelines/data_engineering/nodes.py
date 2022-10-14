@@ -15,6 +15,7 @@ nltk.download('wordnet')
 nltk.download('stopwords')
 nltk.download('omw-1.4')
 nltk.download('averaged_perceptron_tagger')
+from nltk import pos_tag
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords, wordnet
 from nltk.stem import WordNetLemmatizer
@@ -221,6 +222,7 @@ def fetch_sectioned_tweets(max_date:Timestamp) -> pd.DataFrame:
     '''Fetch tweets added since the time the last data was fetched it returns a dataframe'''
     #d = datetime.strptime(max_date['Datetime'].to_string(index=False)[0:-6], "%Y-%m-%d %H:%M:%S")
     d = max_date.strftime("%Y-%m-%d %H:%M:%S")
+    d = datetime.strptime(d,"%Y-%m-%d %H:%M:%S")
     maximum_date = int(time.mktime(d.timetuple())+1)
     now_time = int((datetime.now()+timedelta(days=1)).timestamp())
     sectioned_tweet_list = []
@@ -300,7 +302,7 @@ def preprocess_tweets(data: pd.DataFrame)->pd.DataFrame:
         print("Fetching all records")
         df = fetch_all_tweets()
         print("Done fetching records...") 
-        
+
     df['clean_text'] = df['Text'].apply(lambda x:_clean_tweet(x))
     df['POS tagged'] = df['clean_text'].apply(_token_stop_pos)
     df['Lemma'] = df['POS tagged'].apply(_lemmatize_tweets)

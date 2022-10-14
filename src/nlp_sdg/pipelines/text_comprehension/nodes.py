@@ -54,7 +54,7 @@ def summarize_text(data: pd.DataFrame) -> pd.DataFrame:
 
 
 
-predictor = Predictor.from_path('https://storage.googleapis.com/allennlp-public-models/bidaf-elmo-model-2020.03.19.tar.gz')
+predictor = Predictor.from_path('~/references/bidaf-elmo-model-2020.03.19.tar.gz')
 
 
 #questions in a list
