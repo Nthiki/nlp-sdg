@@ -8,8 +8,9 @@ from pyspark.sql import DataFrame
 from allennlp.predictors.predictor import Predictor
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
-model = AutoModelForSeq2SeqLM.from_pretrained('t5-base')
-tokenizer = AutoTokenizer.from_pretrained('t5-base')
+model_path = "references/t5-base/"
+model = AutoModelForSeq2SeqLM.from_pretrained(model_path)
+tokenizer = AutoTokenizer.from_pretrained(model_path)
 
 
 def summarize_text(data: pd.DataFrame) -> pd.DataFrame:

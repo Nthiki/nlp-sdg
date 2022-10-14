@@ -26,9 +26,11 @@ EXPOSE 8888
 
 # download spacy modules
 RUN python -m spacy download en_core_web_sm
+
+# download pretrained models
 RUN wget -P references/ https://storage.googleapis.com/allennlp-public-models/bidaf-elmo-model-2020.03.19.tar.gz
-RUN wget -P references/t5-base/  https://internship-sdg-2022.s3.eu-west-1.amazonaws.com/kedro/data/06_models/t5-base.zip
-RUN unzip references/t5-base.zip 
-RUN rm t5-base.zip
+RUN wget -P references/  https://internship-sdg-2022.s3.eu-west-1.amazonaws.com/kedro/data/06_models/t5-base.zip
+RUN unzip references/t5-base.zip -d references/
+RUN rm references/t5-base.zip
 
 CMD ["kedro", "run"]
