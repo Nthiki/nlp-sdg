@@ -275,7 +275,7 @@ def _token_stop_pos(text):
 def _lemmatize_tweets(text: str) -> str:
     stop_words = stopwords.words('english')
     lemmatizer = WordNetLemmatizer()
-    text = text.lower()
+    #text = text.lower() text the moment is a list and not a string - something is wrong here
     text = [lemmatizer.lemmatize(word) for word in text.split() if word not in stop_words]
     return ' '.join(text)
 
@@ -305,7 +305,7 @@ def preprocess_tweets(data: pd.DataFrame)->pd.DataFrame:
 
     df['clean_text'] = df['Text'].apply(lambda x:_clean_tweet(x))
     df['POS tagged'] = df['clean_text'].apply(_token_stop_pos)
-    df['Lemma'] = df['POS tagged'].apply(_lemmatize_tweets)
+    df['Lemma'] = df['clean_text'].apply(_lemmatize_tweets)
     df['hashtags'] = df['Text'].apply(lambda x: " ".join ([w for w in x.split() if '#'  in w[0:3] ]))
     df['hashtags']=df['hashtags'].str.replace("[^a-zA-Z0–9]", ' ')
     df = df.loc[:,['Datetime', 'Tweet_Id','Username','Verified','Location','Reply_Count','Retweet_Count','Like_Count','Quote_Count','url','clean_text','hashtags','POS tagged','Lemma']]
