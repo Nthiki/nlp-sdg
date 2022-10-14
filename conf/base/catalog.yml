@@ -136,7 +136,7 @@ tweet_text_data:
 #   layer: raw
 
 
-clean_label_data:
+clean_tweet_data:
   type: pandas.CSVDataSet
   #filepath: data/02_intermediate/clean_label_data.csv
   #layer: intermediate
@@ -153,7 +153,7 @@ clean_label_data:
 
   
 
-raw_data:
+raw_tweet_data:
   type: pandas.SQLQueryDataSet
   credentials: rds_connection_credentials
   sql: SELECT * FROM twitter_stream 

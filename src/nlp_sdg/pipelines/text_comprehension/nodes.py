@@ -6,14 +6,11 @@ generated using Kedro 0.18.2
 import pandas as pd
 from pyspark.sql import DataFrame
 from allennlp.predictors.predictor import Predictor
-
-
-import pandas as pd
-import torch
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
-model = AutoModelForSeq2SeqLM.from_pretrained('t5-base')
-tokenizer = AutoTokenizer.from_pretrained('t5-base')
+model_path = "references/t5-base/"
+model = AutoModelForSeq2SeqLM.from_pretrained(model_path)
+tokenizer = AutoTokenizer.from_pretrained(model_path)
 
 
 def summarize_text(data: pd.DataFrame) -> pd.DataFrame:
@@ -58,7 +55,7 @@ def summarize_text(data: pd.DataFrame) -> pd.DataFrame:
 
 
 
-predictor = Predictor.from_path('https://storage.googleapis.com/allennlp-public-models/bidaf-elmo-model-2020.03.19.tar.gz')
+predictor = Predictor.from_path('~/references/bidaf-elmo-model-2020.03.19.tar.gz')
 
 
 #questions in a list
