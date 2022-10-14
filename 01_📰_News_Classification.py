@@ -53,7 +53,7 @@ config = {
     },
 }
 
-#keep this somewhere safer
+#TO DO: keep this somewhere safer 
 credentials = {
     "s3_credentials": {
             "key": "AKIA5XNJCCEVDTPAHASV",
@@ -145,8 +145,8 @@ data_load_state = st.text('Loading data from AWS S3...')
 data = load_data("osdg_preprocessed_data")
 #catalog.save("boats", df)
 data_load_state.text("")
-#st.dataframe(data)
 
+#load in classifier and vectorizer models
 classifier = catalog.load("sdg_classifier")
 vectorizer = catalog.load("vectorizer")
 
@@ -184,24 +184,23 @@ st.image(sdg_imgs, width=100)
 #need functions that clean incoming data
 
 def clean_text_data(my_text):
-
+    '''
+    TO DO:
+    function that cleans input text data
+    '''
     doc = list(my_text.split(" "))
 
     return my_text
 
-def df_text_predict(df_upload):
-    X = df_upload['text'].values
-    #X_tfidf = vectorizer.transform(X) # need to clean data (remove numbers etc)
-    #predicted = classifier.predict(X_tfidf)
-    if predicted[0] == 1:
-        return "This is SDG label 1"
-    else:
-        return "This is not SDG label 1"
-
 def text_predict(my_text):
+    '''
+    Takes in text (from text box - string), then vectorizes the text and then applies
+    the trained linSVC model to get SDG label predictions
+    '''
     doc = list(my_text.split(" "))
     doc = vectorizer.transform(doc)
     predicted = classifier.predict(doc)
+    #subtract one to get corresponding list index 
     df1 = details.iloc[predicted[0] - 1]
                     
     return display_sdg(df1)
@@ -210,8 +209,7 @@ def text_predict(my_text):
 #main function
 
 def main():
-    #st.title('UN SDG Internship Project')
-    #st.markdown('### Text classification')
+    
     st.markdown('##### How do public artifacts reflect Shell\'s contribution towards Sustainable Development Goals?')
     
     message1 = st.text_area("Type in or paste any text segment (e.g. publication excerpt, news article) in the text box below", "Type Here")
@@ -222,16 +220,18 @@ def main():
         result1 = text_predict(message1)
         #st.success("Success")
 
-    uploaded_file = st.file_uploader("Upload csv file containing news article data")
-    if uploaded_file is not None:
+    
+    #uploaded_file = st.file_uploader("Upload csv file containing news article data")
+    #if uploaded_file is not None:
         
         # Can be used wherever a "file-like" object is accepted:
-        dataframe = pd.read_csv(uploaded_file)
-        st.write(dataframe)
+    #    st.write(dataframe)
+    #    dataframe = pd.read_csv(uploaded_file)
 
-        if st.button('Predict SDG'):
-            result2 = df_text_predict(message1)
-            st.success(result2)
+    #    if st.button('Predict SDG'):
+    #        result2 = df_text_predict(message1)
+    #        st.success(result2)
+    
 
      
     
@@ -250,6 +250,8 @@ if __name__ == '__main__':
 #When we select an article, is it possible to show the article?
 
 #st.dataframe(df)
+st.header('Scraped Shell News Articles')
+st.subheader('View of the dataset')
 
 sdgLabels = {1: "No poverty", 2: "Zero Hunger", 3: "Good Health and well-being", 4: "Quality Education",
              5: "Gender equality", 6: "Clean water and sanitation", 7: "Affordable and clean energy",
@@ -258,14 +260,12 @@ sdgLabels = {1: "No poverty", 2: "Zero Hunger", 3: "Good Health and well-being",
              12: "Responsible consumption and production", 14: "Life below water", 15: "Life on land"}
 
 
-data_load_state = st.text('Loading data from AWS S3...')
 predictions_df = load_data("predictions")
 
 st.write(predictions_df)
 
-st.header('Data Analysis')
-st.subheader('Training data set')
-st.markdown('##### SDG label distribution')
+st.markdown('##### Article predictions')
+
 
 hist_values = np.histogram(data['sdg'], bins=15, range=(0,16))[0]
 top_predictions = pd.DataFrame(predictions_df['predictions'].value_counts())
@@ -274,7 +274,7 @@ top_predictions["Description"] = top_predictions["SDG"].map(sdgLabels)
 #top_predictions['SDG'] = top_predictions.index
 
 #top_predictions['SDG'] = top_predictions.index.to_series()
-st.dataframe(top_predictions)
+st.dataframe(top_predictions, use_container_width=True)
 
 
 #histogram
