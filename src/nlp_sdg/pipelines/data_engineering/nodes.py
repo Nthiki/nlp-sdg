@@ -59,8 +59,8 @@ def _missing_data(df: pd.DataFrame) ->pd.DataFrame:
 
     """
     df1 = df.dropna(subset=['text'])
-    df2 = df1.dropna(subset=['sdg'])
-    return df2
+    #df2 = df1.dropna(subset=['sdg'])
+    return df1
 
 
 def _clean_article(text: str) -> str:
@@ -165,6 +165,29 @@ def osdg_preprocessed_data(data: pd.DataFrame) -> pd.DataFrame:
     data['text'] = data['text'].apply(_lemmatize)
     #clean_agreement
     data = _clean_agreement(data)
+    # Resampling the dataset to balance each target
+    #data = _data_balancing(data)
+
+    return data
+
+def article_preprocessed_data(data: pd.DataFrame) -> pd.DataFrame:
+    '''
+     This function applies all the above functions to the dataframe to make it preprocessed data.
+    
+     Args:
+        data: Full (all columns) training cleaned data according to agreement score
+        
+     Returns:
+        Processed text data as pandas dataframe
+        
+    '''
+    # removing missing rows in the important columns
+    #data = _missing_data(data)
+    #apply text hero
+    data['text'] = data['text'].apply(_clean_article)
+    #lemmatize the text
+    data['text'] = data['text'].apply(_lemmatize)
+    #clean_agreement
     # Resampling the dataset to balance each target
     #data = _data_balancing(data)
 
