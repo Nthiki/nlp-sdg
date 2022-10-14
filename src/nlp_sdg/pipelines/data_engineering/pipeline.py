@@ -19,24 +19,11 @@ def create_pipeline(**kwargs) -> Pipeline:
                 outputs="osdg_preprocessed_data",
                 name="osdg_preprocess_data_node",
             ),
-            #   node(
-            #     func=data_preprocessing,
-            #     inputs="twitter_data",
-            #     outputs="cleaned_twitter_data",
-            #     name="create_twitter_input_table_node",
-            # ),
-
-            # node(
-            #     func=fetch_save_tweets,
-            #     inputs=None,
-            #     outputs= 'save_data_to_rds',
-            #     name= "fetch_save_tweets_node",
-            # ),
 
             node(
                 func= preprocess_tweets,
                 # inputs='tweet_text_data',
-                inputs='raw_data',
+                inputs='raw_tweet_data',
                 outputs='clean_tweet_data',
                 name='preprocess_tweets_node'
             )
@@ -45,7 +32,7 @@ def create_pipeline(**kwargs) -> Pipeline:
     )
     data_engineering = pipeline(
         pipe=pipeline_instance,
-        inputs=["sdg_data","raw_data"],
+        inputs=["sdg_data","raw_tweet_data"],
         namespace = "data_engineering",
         outputs = ["osdg_preprocessed_data", "clean_tweet_data"]
     )
