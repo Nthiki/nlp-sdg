@@ -52,8 +52,12 @@ sdg_text_data:
   load_args:
     # sep: '\t'
 
-locations_and_org_data:
+organization_data:
   type: pandas.CSVDataSet
-  filepath: data/02_intermediate/qes_and_ans_data.csv
+  filepath: data/02_intermediate/organization_data.csv
   layer: intermediate
   
+organization_data:
+  type: pandas.CSVDataSet
+  filepath: data/02_intermediate/organization_data.csv
+  layer: intermediate

@@ -5,7 +5,7 @@ generated using Kedro 0.18.2
 
 from kedro.pipeline import Pipeline, node, pipeline
 
-from nlp_sdg.pipelines.text_comprehension.nodes import dummy_node,locationOrganization
+from nlp_sdg.pipelines.text_comprehension.nodes import dummy_node, get_organization, get_location
 
 
 
@@ -20,10 +20,16 @@ def create_pipeline(**kwargs) -> Pipeline:
                 name="dummy_node",
             ),
             node(
-                func=locationOrganization,
+                func=get_organization,
                 inputs="sdg_text_data",
-                outputs="locations_and_org_data",
-                name="locationOrganization_node",
+                outputs="organization_data",
+                name="get_organization_node",
+            ),
+            node(
+                func=get_location,
+                inputs="sdg_text_data",
+                outputs="location_data",
+                name="get_location_node",
             ),            
         ]
     )
@@ -31,6 +37,6 @@ def create_pipeline(**kwargs) -> Pipeline:
         pipe=pipeline_instance,
         inputs=["model_input_data","sdg_text_data"],
         namespace = "text_comprehension",
-        outputs="locations_and_org_data"
+        outputs=["organization_data", "location_data"]
     )
     return text_comprehension
