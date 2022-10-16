@@ -135,7 +135,7 @@ tweet_text_data:
 #   filepath: data/01_raw/tweets_2.csv
 #   layer: raw
 
-
+#saving the cleaned twitter data
 clean_tweet_data:
   type: pandas.CSVDataSet
   #filepath: data/02_intermediate/clean_label_data.csv
@@ -152,7 +152,7 @@ clean_tweet_data:
     encoding: "utf-8"
 
   
-
+#original data dump is in this RDS 
 raw_tweet_data:
   type: pandas.SQLQueryDataSet
   credentials: rds_connection_credentials
@@ -172,6 +172,22 @@ save_data_to_rds:
   save_args:
     schema: public
     if_exists: append
+
+
+clean_tweet_data_s3:
+  type: pandas.CSVDataSet
+  #filepath: data/02_intermediate/clean_label_data.csv
+  #layer: intermediate
+  filepath: s3://internship-sdg-2022/kedro/data/03_primary/clean_tweet_data_s3.csv
+  credentials: s3_credentials
+  #file_format: csv
+  load_args:
+    sep: ','
+  save_args:
+    index: False
+    sep: ','
+    header: True
+    encoding: "utf-8"
 
 
 cleaned_articles:

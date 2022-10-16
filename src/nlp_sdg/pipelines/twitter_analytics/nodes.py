@@ -15,18 +15,6 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 
 ''' ================================== 
- Dummy code
- ==================================== '''
-
-
-# def dummy_node(data):
-#     print("Twitter Analytics dummy node completed")
-#     return 5
-
-
-
-
-''' ================================== 
      Sentiment analysis
  ==================================== '''
 
@@ -56,11 +44,33 @@ def _vader_sentiment_analysis(tweet):
     else:
         return 'Neutral'
 
+def _vader_sentiment_analysis_2(tweet):
+    
+    '''
+    This function calculates the sentiment score and returns it    
+    
+    Args:
+        tweet: text string  from the twitter data set
+        
+     Returns:
+        Sentiment (pos, neg or neutral).
+
+    '''
+    analyzer = SentimentIntensityAnalyzer()
+    
+    vs = analyzer.polarity_scores(tweet)
+    compound = vs['compound']
+
+    return compound
+
 
 #what about adding more columns here? We could add timestamps to monitor over time, etc
 
 def label_tweet(data:pd.DataFrame) -> pd.DataFrame:
 
-    data['sentiment'] = data['clean_text'].apply(_vader_sentiment_analysis)
-    data = data[['clean_text','sentiment']]
+    data['sentiment'] = data['Lemma'].apply(_vader_sentiment_analysis)
+    data['score'] = data['Lemma'].apply(_vader_sentiment_analysis_2)
+
+
+    #data = data[['clean_text','sentiment']]
     return data

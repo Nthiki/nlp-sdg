@@ -230,7 +230,7 @@ TK: As it stands, I don't see the need for this code, we can simply read from th
  Data engineering functions for Team B
  ==================================== '''
 
-
+#initial data dump to the rds
 def fetch_all_tweets():
     ''' Fetch all tweets from 2017 september based on the keywords provided, it returns a dataframe'''
     tweets_list2 = []
@@ -241,18 +241,21 @@ def fetch_all_tweets():
 
    
 
-def fetch_sectioned_tweets(max_date:Timestamp) -> pd.DataFrame:
-    '''Fetch tweets added since the time the last data was fetched it returns a dataframe'''
-    #d = datetime.strptime(max_date['Datetime'].to_string(index=False)[0:-6], "%Y-%m-%d %H:%M:%S")
-    d = max_date.strftime("%Y-%m-%d %H:%M:%S")
-    d = datetime.strptime(d,"%Y-%m-%d %H:%M:%S")
-    maximum_date = int(time.mktime(d.timetuple())+1)
-    now_time = int((datetime.now()+timedelta(days=1)).timestamp())
-    sectioned_tweet_list = []
-    for i,tweet in enumerate(sntwitter.TwitterSearchScraper(f'(shell affordable energy) OR (shell clean energy) OR (shell affordable clean energy)  OR (shell decent work) OR (shell economic growth) OR (shell decent work economic growth) OR (shell industry innovation infrastructure) OR (shell innovation) OR (shell industry innovation) OR (shell responsible consumption) OR (shell responsible production) OR (shell climate action) OR (shell parternship) OR (shell partnership for goals) lang:en  since_time:{maximum_date} until_time:{now_time}').get_items()):
-        sectioned_tweet_list.append([tweet.date, tweet.id, tweet.content, tweet.user.username,tweet.user.verified,tweet.user.location,tweet.replyCount,tweet.retweetCount,tweet.likeCount,tweet.quoteCount,tweet.url])
-        df = pd.DataFrame(sectioned_tweet_list, columns=['Datetime', 'Tweet_Id', 'Text', 'Username','Verified','Location','Reply_Count','Retweet_Count','Like_Count','Quote_Count','url'])
-    return df
+#For now I think it's best to work with the static version of the dataset
+#
+#def fetch_sectioned_tweets(max_date:Timestamp) -> pd.DataFrame:
+#    
+#    '''Fetch tweets added since the time the last data was fetched it returns a dataframe'''
+#    #d = datetime.strptime(max_date['Datetime'].to_string(index=False)[0:-6], "%Y-%m-%d %H:%M:%S")
+#    d = max_date.strftime("%Y-%m-%d %H:%M:%S")
+#    d = datetime.strptime(d,"%Y-%m-%d %H:%M:%S")
+#    maximum_date = int(time.mktime(d.timetuple())+1)
+#   now_time = int((datetime.now()+timedelta(days=1)).timestamp())
+#    sectioned_tweet_list = []
+#    for i,tweet in enumerate(sntwitter.TwitterSearchScraper(f'(shell affordable energy) OR (shell clean energy) OR (shell affordable clean energy)  OR (shell decent work) OR (shell economic growth) OR (shell decent work economic growth) OR (shell industry innovation infrastructure) OR (shell innovation) OR (shell industry innovation) OR (shell responsible consumption) OR (shell responsible production) OR (shell climate action) OR (shell parternship) OR (shell partnership for goals) lang:en  since_time:{maximum_date} until_time:{now_time}').get_items()):
+#        sectioned_tweet_list.append([tweet.date, tweet.id, tweet.content, tweet.user.username,tweet.user.verified,tweet.user.location,tweet.replyCount,tweet.retweetCount,tweet.likeCount,tweet.quoteCount,tweet.url])
+#        df = pd.DataFrame(sectioned_tweet_list, columns=['Datetime', 'Tweet_Id', 'Text', 'Username','Verified','Location','Reply_Count','Retweet_Count','Like_Count','Quote_Count','url'])
+#    return df
 
 
 def _clean_tweet(tweet):
@@ -302,10 +305,12 @@ def _lemmatize_tweets(text: str) -> str:
     text = [lemmatizer.lemmatize(word) for word in text.split() if word not in stop_words]
     return ' '.join(text)
 
+def twitter_rds_to_csv(data) -> pd.DataFrame:
+    df = pd.DataFrame(data)
+    return df
 
 
-
-def preprocess_tweets(data: pd.DataFrame)->pd.DataFrame:
+def preprocess_tweets(data)->pd.DataFrame:
     '''
     Function takes in the whole dataframe and carries out the following preprocessing steps:
 
@@ -315,16 +320,19 @@ def preprocess_tweets(data: pd.DataFrame)->pd.DataFrame:
 
     Then return the dataframe
     ''' 
-    max_date = data.Datetime.max() 
-    if max_date is not None:
-        print(f"Fetching extra records as from {max_date}")
-        fetched_data =  fetch_sectioned_tweets(max_date)
-        df=fetched_data
-        print("Done fetching  extra records!!")
-    else:
-        print("Fetching all records")
-        df = fetch_all_tweets()
-        print("Done fetching records...") 
+    #max_date = data.Datetime.max() 
+    #if max_date is not None:
+    #    print(f"Fetching extra records as from {max_date}")
+    #    fetched_data = fetch_sectioned_tweets(max_date)
+        #df=fetched_data
+    #    df = data.append(fetched_data)
+    #    print("Done fetching  extra records!!")
+    #else:
+    #    print("Fetching all records")
+    #    df = fetch_all_tweets()
+    #    print("Done fetching records...") 
+
+    df = fetch_all_tweets()
 
     df['clean_text'] = df['Text'].apply(lambda x:_clean_tweet(x))
     df['POS tagged'] = df['clean_text'].apply(_token_stop_pos)
@@ -332,7 +340,7 @@ def preprocess_tweets(data: pd.DataFrame)->pd.DataFrame:
     df['hashtags'] = df['Text'].apply(lambda x: " ".join ([w for w in x.split() if '#'  in w[0:3] ]))
     df['hashtags']=df['hashtags'].str.replace("[^a-zA-Z0–9]", ' ')
     df = df.loc[:,['Datetime', 'Tweet_Id','Username','Verified','Location','Reply_Count','Retweet_Count','Like_Count','Quote_Count','url','clean_text','hashtags','POS tagged','Lemma']]
-    print(f'success!, and max date is {max_date}')
+    #print(f'success!, and max date is {max_date}')
 
     return df
 
