@@ -57,7 +57,7 @@ organization_data:
   filepath: data/02_intermediate/organization_data.csv
   layer: intermediate
   
-organization_data:
+location_data:
   type: pandas.CSVDataSet
-  filepath: data/02_intermediate/organization_data.csv
+  filepath: data/02_intermediate/location_data.csv
   layer: intermediate
