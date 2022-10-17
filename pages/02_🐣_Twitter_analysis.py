@@ -103,6 +103,17 @@ df.sort_index(inplace=True)
 
 st.markdown("Sentiment analysis refers to identifying as well as classifying the sentiments that are expressed in the text source. Tweets are often useful in generating a vast amount of sentiment data upon analysis. These data are useful in understanding the opinion of the people about a variety of topics.")
 
+
+
+#sentiment analysis line plot
+fig, axs = plt.subplots(figsize=(12, 4))
+df.score.resample('M').mean().plot(
+    kind='line', rot=0, ax=axs
+)
+plt.title("Average Monthly Sentiment Score")
+plt.xlabel("Time period")
+plt.ylabel("Sentiment score")
+st.pyplot(fig)
 #st.dataframe(data)
 
 slicer1,slicer2 = st.columns(2)
@@ -200,19 +211,6 @@ bar_plot_sentiment_year(sentiment_choice,year_choice)
 freq_tweets(sentiment_choice,year_choice)
 
 
-st.subheader('Sentiment analysis wider picture')
-
-#sentiment analysis line plot
-fig, axs = plt.subplots(figsize=(12, 4))
-df.score.resample('M').mean().plot(
-    kind='line', rot=0, ax=axs
-)
-plt.title("Average Monthly Sentiment Score")
-plt.xlabel("Time period")
-plt.ylabel("Sentiment score")
-st.pyplot(fig)
-
-
 fig, axs = plt.subplots(figsize=(12, 4))
 data.groupby(data["Month"])["score"].mean().plot(
     kind='bar', rot=0, ax=axs
@@ -225,15 +223,6 @@ st.pyplot(fig)
 data['date'] = pd.to_datetime(data['Datetime'])
 
 
-#tweets = data.groupby(data["Month"]).agg('count')
-yo = df.score.resample('M').mean()
-st.dataframe(yo)
+#yo = df.score.resample('M').mean()
+#st.dataframe(yo)
 
-fig, axs = plt.subplots(figsize=(12, 4))
-df.score.resample('M').mean().plot(
-    kind='line', rot=0, ax=axs
-)
-plt.title("Average Monthly Sentiment Score")
-plt.xlabel("Time period")
-plt.ylabel("Sentiment score")
-st.pyplot(fig)

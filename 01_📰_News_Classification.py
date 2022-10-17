@@ -6,6 +6,7 @@ import time
 import matplotlib.pyplot as plt
 import seaborn as sns
 import altair as alt
+import texthero as hero
 from kedro.config import ConfigLoader
 from kedro.framework.project import settings
 
@@ -189,6 +190,8 @@ def clean_text_data(my_text):
     function that cleans input text data
     '''
     doc = list(my_text.split(" "))
+    text = hero.clean(pd.Series(doc))
+    return text
 
     return my_text
 
@@ -197,8 +200,8 @@ def text_predict(my_text):
     Takes in text (from text box - string), then vectorizes the text and then applies
     the trained linSVC model to get SDG label predictions
     '''
-    doc = list(my_text.split(" "))
-    doc = vectorizer.transform(doc)
+    #doc = list(my_text.split(" "))
+    doc = vectorizer.transform(my_text)
     predicted = classifier.predict(doc)
     #subtract one to get corresponding list index 
     df1 = details.iloc[predicted[0] - 1]
@@ -216,8 +219,8 @@ def main():
     if st.button("Get SDG Label"):
         with st.spinner('Running model...'):
             time.sleep(1)
-        #clean_message = clean_text(message1)
-        result1 = text_predict(message1)
+        clean_message = clean_text_data(message1)
+        result1 = text_predict(clean_message)
         #st.success("Success")
 
     
@@ -250,8 +253,8 @@ if __name__ == '__main__':
 #When we select an article, is it possible to show the article?
 
 #st.dataframe(df)
-st.header('Scraped Shell News Articles')
-st.subheader('View of the dataset')
+st.header('News Articles about Shell')
+#st.subheader('View of the dataset')
 
 sdgLabels = {1: "No poverty", 2: "Zero Hunger", 3: "Good Health and well-being", 4: "Quality Education",
              5: "Gender equality", 6: "Clean water and sanitation", 7: "Affordable and clean energy",
@@ -262,9 +265,9 @@ sdgLabels = {1: "No poverty", 2: "Zero Hunger", 3: "Good Health and well-being",
 
 predictions_df = load_data("predictions")
 
-st.write(predictions_df)
+#st.write(predictions_df)
 
-st.markdown('##### Article predictions')
+st.markdown('##### Model Predictions')
 
 
 hist_values = np.histogram(data['sdg'], bins=15, range=(0,16))[0]
@@ -274,14 +277,13 @@ top_predictions["Description"] = top_predictions["SDG"].map(sdgLabels)
 #top_predictions['SDG'] = top_predictions.index
 
 #top_predictions['SDG'] = top_predictions.index.to_series()
-st.dataframe(top_predictions, use_container_width=True)
-
 
 #histogram
-
-
 c = alt.Chart(top_predictions).mark_bar().encode(
         alt.X("predictions", title='Number of predictions'), alt.Y('Description',title='Description of SDG'))
 
 
 st.altair_chart(c, use_container_width=True)
+
+#display dataframe of predictions
+st.dataframe(top_predictions, use_container_width=True)
