@@ -43,8 +43,8 @@ osdg_preprocessed_data:
 
 q_and_a_data:
   type: pandas.CSVDataSet
-  layer: intermediate
-  filepath: s3://internship-sdg-2022/kedro/data/02_intermediate/q_and_a_data.csv
+  layer: primary
+  filepath: s3://internship-sdg-2022/kedro/data/03_primary/q_and_a_data.csv
   credentials: s3_credentials
   load_args:
     sep: ','
@@ -64,13 +64,13 @@ articles:
   
 organization_data:
   type: pandas.CSVDataSet
-  filepath: s3://internship-sdg-2022/kedro/data/02_intermediate/organization_data.csv
-  layer: intermediate
+  filepath: s3://internship-sdg-2022/kedro/data/03_primary/organization_data.csv
+  layer: primary
   
 location_data:
   type: pandas.CSVDataSet
-  filepath: s3://internship-sdg-2022/kedro/data/02_intermediate/location_data.csv
-  layer: intermediate
+  filepath: s3://internship-sdg-2022/kedro/data/03_primary/location_data.csv
+  layer: primary
 
 #######################
 #  Team B - Twitter   #
