@@ -17,7 +17,6 @@
 
 sdg_data:
   type: pandas.CSVDataSet
-  #filepath: data/01_raw/train.csv
   filepath: s3://internship-sdg-2022/kedro/data/01_raw/train.csv
   credentials: s3_credentials
   layer: raw
@@ -64,12 +63,12 @@ articles:
   
 organization_data:
   type: pandas.CSVDataSet
-  filepath: data/02_intermediate/organization_data.csv
+  filepath: s3://internship-sdg-2022/kedro/data/02_intermediate/organization_data.csv
   layer: intermediate
   
 location_data:
   type: pandas.CSVDataSet
-  filepath: data/02_intermediate/location_data.csv
+  filepath: s3://internship-sdg-2022/kedro/data/02_intermediate/location_data.csv
   layer: intermediate
 
 #######################
@@ -77,15 +76,8 @@ location_data:
 #######################
 
 
-#sdg text data for tutorial example
-twitter_data:
-  type: pandas.CSVDataSet
-  filepath: data/01_raw/tweets.csv
-  layer: raw
-
 
 #The twitter text data after being cleaned (it has a new column called 'clean_text')
-
 clean_tweet_data:
   type: pandas.CSVDataSet
   layer: intermediate
@@ -144,13 +136,8 @@ raw_tweet_data:
   type: pandas.SQLQueryDataSet
   credentials: rds_connection_credentials
   sql: SELECT * FROM twitter_stream 
+  layer: raw
 
-rds_connection:
-  type: pandas.SQLTableDataSet
-  credentials: rds_connection_credentials
-  table_name: twitter_stream
-  save_args:
-    if_exists: replace
 
 save_data_to_rds:
   type: pandas.SQLTableDataSet
