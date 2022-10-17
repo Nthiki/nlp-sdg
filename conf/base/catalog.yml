@@ -26,10 +26,9 @@ sdg_data:
 
 osdg_preprocessed_data:
   type: pandas.CSVDataSet
-  #filepath: data/02_intermediate/osdg_preprocessed_data.csv
+  layer: intermediate
   filepath: s3://internship-sdg-2022/kedro/data/02_intermediate/osdg_preprocessed_data.csv
   credentials: s3_credentials
-  #file_format: csv
   load_args:
     sep: ','
   save_args:
@@ -45,10 +44,9 @@ osdg_preprocessed_data:
 
 q_and_a_data:
   type: pandas.CSVDataSet
-  #filepath: data/02_intermediate/q_and_a_data.csv
+  layer: intermediate
   filepath: s3://internship-sdg-2022/kedro/data/02_intermediate/q_and_a_data.csv
   credentials: s3_credentials
-  #file_format: csv
   load_args:
     sep: ','
   save_args:
@@ -90,11 +88,9 @@ twitter_data:
 
 clean_tweet_data:
   type: pandas.CSVDataSet
-  #filepath: data/02_intermediate/clean_tweet_data.csv
-  #layer: intermediate
+  layer: intermediate
   filepath: s3://internship-sdg-2022/kedro/data/02_intermediate/clean_tweet_data.csv
   credentials: s3_credentials
-  #file_format: csv
   load_args:
     sep: ','
   save_args:
@@ -107,11 +103,9 @@ clean_tweet_data:
 #The twitter text data after being labelled (sentiment)
 labelled_twitter_data:
   type: pandas.CSVDataSet
-  #filepath: data/03_primary/labelled_twitter_data.csv
-  #layer: primary
+  layer: primary
   filepath: s3://internship-sdg-2022/kedro/data/03_primary/labelled_twitter_data.csv
   credentials: s3_credentials
-  #file_format: csv
   load_args:
     sep: ','
   save_args:
@@ -121,14 +115,6 @@ labelled_twitter_data:
     encoding: "utf-8"
 
 
-# models
-
-#classifier:
-#  type: pickle.PickleDataSet
-#  filepath: data/06_models/sdg_classifier.pickle
-#  versioned: true
-#  layer: models
-
 tweet_text_data:
   type: pandas.CSVDataSet
   filepath: data/01_raw/tweets_2.csv
@@ -136,16 +122,11 @@ tweet_text_data:
   #load_args:
     #sep: '/t'
 
-# raw_tweet_text_data:
-#   type: pandas.CSVDataSet
-#   filepath: data/01_raw/tweets_2.csv
-#   layer: raw
 
 #saving the cleaned twitter data
 clean_tweet_data:
   type: pandas.CSVDataSet
-  #filepath: data/02_intermediate/clean_label_data.csv
-  #layer: intermediate
+  layer: intermediate
   filepath: s3://internship-sdg-2022/kedro/data/02_intermediate/clean_tweet_data.csv
   credentials: s3_credentials
   #file_format: csv
@@ -182,11 +163,9 @@ save_data_to_rds:
 
 clean_tweet_data_s3:
   type: pandas.CSVDataSet
-  #filepath: data/02_intermediate/clean_label_data.csv
-  #layer: intermediate
+  layer: intermediate
   filepath: s3://internship-sdg-2022/kedro/data/03_primary/clean_tweet_data_s3.csv
   credentials: s3_credentials
-  #file_format: csv
   load_args:
     sep: ','
   save_args:
@@ -198,11 +177,9 @@ clean_tweet_data_s3:
 
 cleaned_articles:
   type: pandas.CSVDataSet
-  #filepath: data/02_intermediate/clean_tweet_data.csv
-  #layer: intermediate
+  layer: intermediate
   filepath: s3://internship-sdg-2022/kedro/data/02_intermediate/cleaned_articles.csv
   credentials: s3_credentials
-  #file_format: csv
   load_args:
     sep: ','
   save_args:
@@ -218,12 +195,6 @@ cleaned_articles:
 #######################
 
 # saving the text classification model
-
-#text_classification.sdg_classifier:
-#  type: pickle.PickleDataSet
-#  filepath: data/06_models/sdg_classifier.pickle
-#  versioned: true
-#  layer: models
 
 text_classification.vectorizer:
   type: pickle.PickleDataSet
