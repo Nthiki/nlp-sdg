@@ -37,6 +37,6 @@ def create_pipeline(**kwargs) -> Pipeline:
         pipe=pipeline_instance,
         inputs="articles",
         namespace = "text_comprehension",
-        outputs = ["q_and_a_data","location_data","organisation_data"]
+        outputs = ["q_and_a_data","location_data","organization_data"]
     )
     return text_comprehension

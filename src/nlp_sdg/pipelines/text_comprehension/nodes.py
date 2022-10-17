@@ -5,6 +5,9 @@ generated using Kedro 0.18.2
 
 import pandas as pd
 from pyspark.sql import DataFrame
+from allennlp.data.tokenizers.sentence_splitter import SpacySentenceSplitter
+import allennlp_models.tagging
+from tqdm import tqdm
 from allennlp.predictors.predictor import Predictor
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
