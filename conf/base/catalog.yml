@@ -58,6 +58,7 @@ articles:
   type: pandas.SQLTableDataSet
   credentials: rds_connection_credentials
   table_name: shell_webscraped_articles
+  layer: raw
   save_args:
     if_exists: replace
   
@@ -188,12 +189,14 @@ text_classification.vectorizer:
   filepath: s3://internship-sdg-2022/kedro/data/06_models/vectorizer.pickle
   credentials: s3_credentials
   backend: pickle
+  layer: models
 
 text_classification.sdg_classifier:
   type: pickle.PickleDataSet
   filepath: s3://internship-sdg-2022/kedro/data/06_models/sdg_classifier.pickle
   credentials: s3_credentials
   backend: pickle
+  layer: models
 
 
 predictions:
