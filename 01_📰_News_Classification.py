@@ -54,10 +54,11 @@ config = {
 }
 
 #TO DO: keep this somewhere safer 
+# @LUKA I think we need to read this in from the credentials file stored in the local/ folder
 credentials = {
     "s3_credentials": {
-            "key": "AKIA5XNJCCEVDTPAHASV",
-            "secret": "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"
+            "key": "<key>",
+            "secret": "<secret>"
      }
 }
 
