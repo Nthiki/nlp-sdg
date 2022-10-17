@@ -63,10 +63,16 @@ articles:
   table_name: shell_webscraped_articles
   save_args:
     if_exists: replace
-
-# articles_data:
-#   type: pandas.CSVDataSet
-#   filepath: /home/kedro/data/01_raw/articles.csv
+  
+organization_data:
+  type: pandas.CSVDataSet
+  filepath: data/02_intermediate/organization_data.csv
+  layer: intermediate
+  
+location_data:
+  type: pandas.CSVDataSet
+  filepath: data/02_intermediate/location_data.csv
+  layer: intermediate
 
 #######################
 #  Team B - Twitter   #
