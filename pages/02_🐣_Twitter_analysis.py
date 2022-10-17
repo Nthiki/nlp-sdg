@@ -1,6 +1,12 @@
 import streamlit as st
 import seaborn as sns
 import altair as alt
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from datetime import datetime
+
+
 
 
 from kedro.io import DataCatalog
@@ -22,8 +28,8 @@ st.sidebar.markdown("# Twitter analysis")
 #update these colms using real time twitter data
 
 col1, col2, col3 = st.columns(3)
-col1.metric("Sentiment", "Positive", "4%")
-col2.metric("Number of tweets", "1,340", "202")
+col1.metric("Number of tweets", "16193")
+col2.metric("Data coverage", "3+ years")
 col3.metric("Mentions", "839", "3")
 
 
@@ -54,21 +60,13 @@ config = {
             "sep": ','
         }
     },
-     "clean_tweet_data_csv": {
-        "type": "pandas.CSVDataSet",
-        "filepath": "s3://internship-sdg-2022/kedro/data/03_primary/clean_tweet_data_csv.csv",
-        "credentials": "s3_credentials",
-        "load_args": {
-            "sep": ','
-        }
-    },
 }
 
 #TO DO: keep this somewhere safer 
 credentials = {
     "s3_credentials": {
-            "key": "AKIA5XNJCCEVDTPAHASV",
-            "secret": "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"
+            "key": "key",
+            "secret": "secret"
      }
 }
 
@@ -79,6 +77,7 @@ catalog = DataCatalog.from_config(config, credentials)
 @st.cache(allow_output_mutation = True)
 def load_data(data_name):
     data = catalog.load(data_name)
+    data.drop(data.tail(383).index,inplace=True)
     #can add extra stuff here
     return data
 
@@ -88,15 +87,109 @@ data = load_data("labelled_twitter_data")
 #catalog.save("boats", df)
 data_load_state.text("")
 
-st.dataframe(data)
+
+#data['Datetime']= pd.to_datetime(data['Datetime'], utc=True).dt.date
+data['Year'] = pd.DatetimeIndex(data['Datetime']).year  
+data['Month'] = pd.DatetimeIndex(data['Datetime']).month  
+
+# build a datetime index from the date column
+datetime_series = pd.to_datetime(data['Datetime'])
+datetime_index = pd.DatetimeIndex(datetime_series.values)
+
+df=data.set_index(datetime_index)
+df.sort_index(inplace=True)
+
+#st.dataframe(df)
 
 
-c = alt.Chart(data).mark_line().encode(
-        alt.X("Datetime", title='Number of predictions'), alt.Y('score',title='Description of SDG'))
+#st.dataframe(data)
+
+slicer1,slicer2 = st.columns(2)
+
+with slicer1:
+    option_list = ['All'] + list(data['sentiment'].unique())
+    sentiment_option = st.selectbox("Select sentiment",option_list)
+    sentiment_choice = sentiment_option
+
+with slicer2:
+    option_list = ['All'] + list(data['Year'].unique())
+    year_option = st.selectbox("Select Year",option_list)
+    year_choice = year_option
+
+@st.cache
+def get_tweet_no_metrics(sentiment_choice,year_choice ):
+
+    if (sentiment_choice == 'All') & (year_choice == 'All'):
+        total_tweet = data['Tweet_Id'].nunique()
+
+    elif (sentiment_choice == sentiment_choice) & (year_choice == 'All'):
+        total_tweet = data[data['sentiment'] == sentiment_choice]['Tweet_Id'].nunique()
+        
+    elif (sentiment_choice == 'All') & (year_choice == year_choice):
+        total_tweet = data[data['Year'] == year_choice]['Tweet_Id'].nunique()
+
+    else:
+        total_tweet = data[(data['sentiment'] == sentiment_choice) & (data['Year'] == year_choice)]['Tweet_Id'].nunique()
+
+    return total_tweet
 
 
-st.altair_chart(c, use_container_width=True)
+@st.cache
+def get_loc_metrics(sentiment_choice,year_choice):
+
+    if (sentiment_choice == 'All') & (year_choice == 'All'):
+        location_tweet = data['Location'].nunique()
+
+    elif (sentiment_choice == sentiment_choice) & (year_choice == 'All'):
+        location_tweet = data[data['sentiment'] == sentiment_choice]['Location'].nunique()
+        
+    elif (sentiment_choice == 'All') & (year_choice == year_choice):
+        location_tweet = data[data['Year'] == year_choice]['Location'].nunique()
+
+    else:
+        location_tweet = data[(data['sentiment'] == sentiment_choice) & (data['Year'] == year_choice)]['Location'].nunique()
+
+    return location_tweet
 
 
-df = load_data("clean_tweet_data")
-st.dataframe(df)
+
+col1, col2 = st.columns(2)
+col1.metric("Number of tweets", get_tweet_no_metrics(sentiment_choice,year_choice ))
+col2.metric("Number of locations", get_loc_metrics(sentiment_choice,year_choice ))
+
+
+#sentiment analysis line plot
+fig, axs = plt.subplots(figsize=(12, 4))
+df.score.resample('M').mean().plot(
+    kind='line', rot=0, ax=axs
+)
+plt.title("Average Monthly Sentiment Score")
+plt.xlabel("Time period")
+plt.ylabel("Sentiment score")
+st.pyplot(fig)
+
+
+fig, axs = plt.subplots(figsize=(12, 4))
+data.groupby(data["Month"])["score"].mean().plot(
+    kind='bar', rot=0, ax=axs
+)
+plt.title("Average Sentiment Score per month")
+plt.xlabel("Months")
+plt.ylabel("Sentiment score")
+st.pyplot(fig)
+
+data['date'] = pd.to_datetime(data['Datetime'])
+
+
+#tweets = data.groupby(data["Month"]).agg('count')
+yo = df.score.resample('M').mean()
+st.dataframe(yo)
+
+fig, axs = plt.subplots(figsize=(12, 4))
+df.score.resample('M').mean().plot(
+    kind='line', rot=0, ax=axs
+)
+plt.title("Average Monthly Sentiment Score")
+plt.xlabel("Time period")
+plt.ylabel("Sentiment score")
+st.pyplot(fig)

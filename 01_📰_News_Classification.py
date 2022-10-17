@@ -56,8 +56,8 @@ config = {
 #TO DO: keep this somewhere safer 
 credentials = {
     "s3_credentials": {
-            "key": "AKIA5XNJCCEVDTPAHASV",
-            "secret": "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"
+            "key": "key",
+            "secret": "secret"
      }
 }
 
