@@ -10,6 +10,8 @@ from datetime import datetime
 
 
 from kedro.io import DataCatalog
+from kedro.config import ConfigLoader
+from kedro.framework.project import settings
 import yaml
 
 from kedro.extras.datasets.pickle import PickleDataSet
@@ -21,7 +23,6 @@ from kedro.extras.datasets.pandas import (
     ParquetDataSet,
 )
 
-
 st.markdown("# Twitter analysis")
 st.sidebar.markdown("# Twitter analysis")
 
@@ -30,7 +31,7 @@ st.sidebar.markdown("# Twitter analysis")
 col1, col2, col3 = st.columns(3)
 col1.metric("Number of tweets", "16193")
 col2.metric("Data coverage", "3+ years")
-col3.metric("Mentions", "839", "3")
+col3.metric("Overall sentiment", "Positive")
 
 
 
@@ -62,15 +63,14 @@ config = {
     },
 }
 
-#TO DO: keep this somewhere safer 
-credentials = {
-    "s3_credentials": {
-            "key": "key",
-            "secret": "secret"
-     }
-}
 
-catalog = DataCatalog.from_config(config, credentials)
+#retieving keys and secret
+conf_path = "conf/"
+conf_loader = ConfigLoader(conf_path)
+conf_catalog = conf_loader.get("credentials*", "credentials*/**")
+
+
+catalog = DataCatalog.from_config(config, conf_catalog)
 
 
 #cache function that loads in data
@@ -101,6 +101,7 @@ df.sort_index(inplace=True)
 
 #st.dataframe(df)
 
+st.markdown("Sentiment analysis refers to identifying as well as classifying the sentiments that are expressed in the text source. Tweets are often useful in generating a vast amount of sentiment data upon analysis. These data are useful in understanding the opinion of the people about a variety of topics.")
 
 #st.dataframe(data)
 
@@ -134,7 +135,7 @@ def get_tweet_no_metrics(sentiment_choice,year_choice ):
     return total_tweet
 
 
-@st.cache
+#@st.cache
 def get_loc_metrics(sentiment_choice,year_choice):
 
     if (sentiment_choice == 'All') & (year_choice == 'All'):
@@ -151,12 +152,55 @@ def get_loc_metrics(sentiment_choice,year_choice):
 
     return location_tweet
 
+#@st.cache
+def bar_plot_sentiment_year(sentiment_choice,year_choice):
+    fig, axs = plt.subplots(figsize=(12, 4))
+
+    if (sentiment_choice == sentiment_choice) & (year_choice == 'All'):
+        plt.hist(data['sentiment'])
+        plt.title("Distribution of Sentiment in All years")
+        #plt.xlabel("Sentiment")
+        plt.ylabel("Frequency")
+
+    else:
+        time_data = data[data['Year'] == year_choice]
+        plt.hist(time_data['sentiment'])
+        plt.title(f"Distribution of Sentiment in {year_choice}")
+        #plt.xlabel("Sentiment")
+        plt.ylabel("Frequency")
+
+    return st.pyplot(fig)
+
+#@st.cache
+def freq_tweets(sentiment_choice,year_choice):
+    fig, axs = plt.subplots(figsize=(12, 4))
+
+    if (sentiment_choice == sentiment_choice) & (year_choice == 'All'):
+        df.resample('M').size().plot(kind='line', rot=0, ax=axs)
+        plt.title("Average Monthly Tweet Frequency")
+        #plt.xlabel("Sentiment")
+        plt.ylabel("Frequency")
+
+    else:
+        df_freq = df[df['Year'] == year_choice]
+        df_freq.resample('M').size().plot(kind='line', rot=0, ax=axs)
+        plt.title(f"Average Monthly Tweet Frequency in {year_choice}")
+        #plt.xlabel("Sentiment")
+        plt.ylabel("Frequency")
+
+    return st.pyplot(fig)
 
 
 col1, col2 = st.columns(2)
 col1.metric("Number of tweets", get_tweet_no_metrics(sentiment_choice,year_choice ))
-col2.metric("Number of locations", get_loc_metrics(sentiment_choice,year_choice ))
+col2.metric("Number of locations mentioned", get_loc_metrics(sentiment_choice,year_choice ))
 
+bar_plot_sentiment_year(sentiment_choice,year_choice)
+
+freq_tweets(sentiment_choice,year_choice)
+
+
+st.subheader('Sentiment analysis wider picture')
 
 #sentiment analysis line plot
 fig, axs = plt.subplots(figsize=(12, 4))

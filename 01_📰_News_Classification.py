@@ -6,6 +6,8 @@ import time
 import matplotlib.pyplot as plt
 import seaborn as sns
 import altair as alt
+from kedro.config import ConfigLoader
+from kedro.framework.project import settings
 
 
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -53,13 +55,11 @@ config = {
     },
 }
 
-#TO DO: keep this somewhere safer 
-credentials = {
-    "s3_credentials": {
-            "key": "key",
-            "secret": "secret"
-     }
-}
+#retieving keys and secret
+conf_path = "conf/"
+conf_loader = ConfigLoader(conf_path)
+conf_catalog = conf_loader.get("credentials*", "credentials*/**")
+
 
 
 details = {'sdgLables': ["No poverty", "Zero Hunger", "Good Health and well-being",
@@ -130,7 +130,7 @@ def display_sdg(pred):
         st.markdown('Click on the image to find out more.')
 
 
-catalog = DataCatalog.from_config(config, credentials)
+catalog = DataCatalog.from_config(config, conf_catalog)
 
 
 #cache function that loads in data
