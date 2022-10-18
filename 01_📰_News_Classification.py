@@ -63,6 +63,7 @@ conf_catalog = conf_loader.get("credentials*", "credentials*/**")
 
 
 
+
 details = {'sdgLables': ["No poverty", "Zero Hunger", "Good Health and well-being",
                          "Quality Education", "Gender equality", "Clean water and sanitation",
                          "Affordable and clean energy", "Decent work and economic growth",
