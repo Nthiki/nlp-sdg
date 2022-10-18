@@ -35,3 +35,5 @@ allennlp-models
 snscrape
 streamlit
 transformers
+seaborn
+altair
