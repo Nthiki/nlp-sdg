@@ -4,6 +4,12 @@ import torch
 from transformers import pipeline
 from transformers import T5Tokenizer, T5ForConditionalGeneration
 
+import plotly.express as px
+from geopy.geocoders import Nominatim
+import folium
+from streamlit_folium import folium_static
+from geopy.extra.rate_limiter import RateLimiter
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 @st.cache(allow_output_mutation=True)
