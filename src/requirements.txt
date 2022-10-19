@@ -40,3 +40,4 @@ altair
 streamlit_folium
 geopy
 folium
+streamlit_option_menu
