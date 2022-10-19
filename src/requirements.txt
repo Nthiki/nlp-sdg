@@ -37,3 +37,6 @@ streamlit
 transformers
 seaborn
 altair
+streamlit_folium
+geopy
+folium
