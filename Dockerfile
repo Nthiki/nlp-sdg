@@ -24,6 +24,7 @@ RUN chmod -R a+w /home/kedro
 
 EXPOSE 8888
 EXPOSE 8501
+EXPOSE 4141
 
 # download spacy modules
 RUN python -m spacy download en_core_web_sm
