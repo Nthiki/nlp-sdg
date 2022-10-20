@@ -23,6 +23,7 @@ USER kedro
 RUN chmod -R a+w /home/kedro
 
 EXPOSE 8888
+EXPOSE 8501
 
 # download spacy modules
 RUN python -m spacy download en_core_web_sm
@@ -34,4 +35,5 @@ RUN wget -P references/  https://internship-sdg-2022.s3.eu-west-1.amazonaws.com/
 RUN unzip references/t5-base.zip -d references/
 RUN rm references/t5-base.zip
 
-CMD ["kedro", "run"]
+#CMD ["kedro", "run"]
+ENTRYPOINT ["streamlit", "run", "01_📰_News_Classification.py", "--server.port=8501", "--server.address=0.0.0.0"]
