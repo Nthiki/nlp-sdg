@@ -45,7 +45,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             ),
             node(
                 func=get_predictions,
-                inputs=['articles','sdg_classifier', 'X_news_vec'],
+                inputs=['cleaned_articles','sdg_classifier', 'X_news_vec'],
                 outputs='predictions',
                 name="predict_new_text_node",
             ),
@@ -53,7 +53,7 @@ def create_pipeline(**kwargs) -> Pipeline:
     )
     text_classification = pipeline(
         pipe=pipeline_instance,
-        inputs=["osdg_preprocessed_data","cleaned_articles", 'articles'],
+        inputs=["osdg_preprocessed_data","cleaned_articles"],
         namespace = "text_classification",
         outputs = 'predictions'
     )
