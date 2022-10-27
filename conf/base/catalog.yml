@@ -9,38 +9,209 @@
 # (transcoding), templating and a way to reuse arguments that are frequently repeated. See more here:
 # https://kedro.readthedocs.io/en/stable/data/data_catalog.html
 #
+
+#######################
+#  Team C            #
+#######################
+
+
 sdg_data:
-  type: spark.SparkDataSet
-  filepath: data/01_raw/train.csv
-  file_format: csv
-  #credentials: dev_s3
+  type: pandas.CSVDataSet
+  filepath: s3://internship-sdg-2022/kedro/data/01_raw/train.csv
+  credentials: s3_credentials
+  layer: raw
   load_args:
-    header: True
-    inferSchema: True
-  save_args:
     sep: '\t'
 
-model_input_data:
-  type: MemoryDataSet
+osdg_preprocessed_data:
+  type: pandas.CSVDataSet
+  layer: intermediate
+  filepath: s3://internship-sdg-2022/kedro/data/02_intermediate/osdg_preprocessed_data.csv
+  credentials: s3_credentials
+  load_args:
+    sep: ','
+  save_args:
+    index: False
+    sep: ','
+    header: True
+    encoding: "utf-8"
 
-twitter_analytics.dummy_data:
-  type: MemoryDataSet
 
-text_comprehension.dummy_data:
-  type: MemoryDataSet
+#######################
+#  Team A             #
+#######################
 
-text_classification.dummy_data:
-  type: MemoryDataSet
+q_and_a_data:
+  type: pandas.CSVDataSet
+  layer: primary
+  filepath: s3://internship-sdg-2022/kedro/data/03_primary/q_and_a_data.csv
+  credentials: s3_credentials
+  load_args:
+    sep: ','
+  save_args:
+    index: False
+    sep: ','
+    header: True
+    encoding: "utf-8"
+
+articles:
+  type: pandas.SQLTableDataSet
+  credentials: rds_connection_credentials
+  table_name: shell_webscraped_articles
+  layer: raw
+  save_args:
+    if_exists: replace
+  
+organization_data:
+  type: pandas.CSVDataSet
+  filepath: s3://internship-sdg-2022/kedro/data/03_primary/organization_data.csv
+  layer: primary
+  
+location_data:
+  type: pandas.CSVDataSet
+  filepath: s3://internship-sdg-2022/kedro/data/03_primary/location_data.csv
+  layer: primary
+
+#######################
+#  Team B - Twitter   #
+#######################
 
 
-# dummy_data:
-#   type: spark.SparkDataSet
-  # filepath: data/01_raw/osdg-dummy_data.csv
-  # file_format: csv
-  # #credentials: dev_s3
-  # load_args:
-  #   header: True
-  #   inferSchema: True
-  # save_args:
-  #   sep: '\t'
-  #   overwrite: True
+
+#The twitter text data after being cleaned (it has a new column called 'clean_text')
+clean_tweet_data:
+  type: pandas.CSVDataSet
+  layer: intermediate
+  filepath: s3://internship-sdg-2022/kedro/data/02_intermediate/clean_tweet_data.csv
+  credentials: s3_credentials
+  load_args:
+    sep: ','
+  save_args:
+    index: False
+    sep: ','
+    header: True
+    encoding: "utf-8"
+
+
+#The twitter text data after being labelled (sentiment)
+labelled_twitter_data:
+  type: pandas.CSVDataSet
+  layer: primary
+  filepath: s3://internship-sdg-2022/kedro/data/03_primary/labelled_twitter_data.csv
+  credentials: s3_credentials
+  load_args:
+    sep: ','
+  save_args:
+    index: False
+    sep: ','
+    header: True
+    encoding: "utf-8"
+
+
+tweet_text_data:
+  type: pandas.CSVDataSet
+  filepath: data/01_raw/tweets_2.csv
+  layer: raw
+  #load_args:
+    #sep: '/t'
+
+
+#saving the cleaned twitter data
+clean_tweet_data:
+  type: pandas.CSVDataSet
+  layer: intermediate
+  filepath: s3://internship-sdg-2022/kedro/data/02_intermediate/clean_tweet_data.csv
+  credentials: s3_credentials
+  #file_format: csv
+  load_args:
+    sep: ','
+  save_args:
+    index: False
+    sep: ','
+    header: True
+    encoding: "utf-8"
+
+  
+#original data dump is in this RDS 
+raw_tweet_data:
+  type: pandas.SQLQueryDataSet
+  credentials: rds_connection_credentials
+  sql: SELECT * FROM twitter_stream 
+  layer: raw
+
+
+save_data_to_rds:
+  type: pandas.SQLTableDataSet
+  credentials: rds_connection_credentials
+  table_name: twitter_stream
+  save_args:
+    schema: public
+    if_exists: append
+
+
+clean_tweet_data_s3:
+  type: pandas.CSVDataSet
+  layer: intermediate
+  filepath: s3://internship-sdg-2022/kedro/data/03_primary/clean_tweet_data_s3.csv
+  credentials: s3_credentials
+  load_args:
+    sep: ','
+  save_args:
+    index: False
+    sep: ','
+    header: True
+    encoding: "utf-8"
+
+
+cleaned_articles:
+  type: pandas.CSVDataSet
+  layer: intermediate
+  filepath: s3://internship-sdg-2022/kedro/data/02_intermediate/cleaned_articles.csv
+  credentials: s3_credentials
+  load_args:
+    sep: ','
+  save_args:
+    index: False
+    sep: ','
+    header: True
+    encoding: "utf-8"
+
+
+
+#######################
+#  Models             #
+#######################
+
+# saving the text classification model
+
+text_classification.vectorizer:
+  type: pickle.PickleDataSet
+  filepath: s3://internship-sdg-2022/kedro/data/06_models/vectorizer.pickle
+  credentials: s3_credentials
+  backend: pickle
+  layer: models
+
+text_classification.sdg_classifier:
+  type: pickle.PickleDataSet
+  filepath: s3://internship-sdg-2022/kedro/data/06_models/sdg_classifier.pickle
+  credentials: s3_credentials
+  backend: pickle
+  layer: models
+
+
+predictions:
+  type: pandas.CSVDataSet
+  #filepath: data/02_intermediate/clean_tweet_data.csv
+  #layer: intermediate
+  filepath: s3://internship-sdg-2022/kedro/data/07_model_output/predictions.csv
+  credentials: s3_credentials
+  #file_format: csv
+  load_args:
+    sep: ','
+  save_args:
+    index: False
+    #sep: ','
+    header: True
+    encoding: "utf-8"
+ 
+
